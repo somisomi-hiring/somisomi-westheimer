@@ -225,6 +225,7 @@ const DEFAULT_APP_QUESTIONS = [
   { key:'hoursMinimum', label:'Minimum hours/week', type:'number', placeholder:'e.g. 10', required:true, enabled:true },
   { key:'transport', label:'Do you have reliable transportation?', type:'radio', options:['Yes - own car','Yes - shared car','Yes - rideshare/bus','No'], required:true, enabled:true },
   { key:'bank', label:'Bank account for direct deposit?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'hoursOkay', label:'Are you okay with 15–20 hours per week?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'startNow', label:'Can you start immediately?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'startDate', label:'When can you start?', type:'date', required:false, enabled:true, conditional:'startNow:No' },
   { key:'currentlyEmployed', label:"What's your work experience?", type:'radio', options:['Currently employed','Previously employed','First job'], required:true, enabled:true },
@@ -237,6 +238,7 @@ const DEFAULT_APP_QUESTIONS = [
   { key:'recentWhen', label:'How long ago?', type:'text', placeholder:'e.g. 3 months ago', required:true, enabled:true, conditional:'currentlyEmployed:Previously employed' },
   { key:'recentLength', label:'How long were you there?', type:'text', placeholder:'e.g. 1 year', required:true, enabled:true, conditional:'currentlyEmployed:Previously employed' },
   { key:'recentReason', label:'Reason for leaving?', type:'text', placeholder:'e.g. Moved', required:true, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'goodStanding', label:'If you have left a previous job, did you give proper notice and leave in good standing?', type:'radio', options:['Yes','No','Not Applicable'], required:true, enabled:true },
   { key:'foodExp', label:'Any food industry experience?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'comfortPhysical', label:'Comfortable standing for long periods, doing food prep, and cleaning?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'comfortRush', label:'Comfortable handling busy rushes and difficult customers?', type:'radio', options:['Yes','No'], required:true, enabled:true },
@@ -262,18 +264,18 @@ function buildDynamicForm() {
     'machineCleaning','schedNotes','hoursPreferred','hoursMinimum',
     'currentlyEmployed','currentCompany','currentTitle','currentLength','currentReason',
     'recentCompany','recentTitle','recentWhen','recentLength','recentReason','foodExp',
-    'comfortPhysical','comfortRush','notes'];
+    'comfortPhysical','comfortRush','notes','hoursOkay','goodStanding'];
   const customKeys = enabledQuestions.filter(q => !knownKeys.includes(q.key)).map(q => q.key);
 
   // Availability questions ABOVE the schedule grid
   const topSections = [
-    { id:'availability-top', title:'📅 Availability', icon:'📅', keys:['student','gradYear','otherJob','otherJobDesc','jobType','lastDay','transport','bank','startNow','startDate'] },
+    { id:'availability-top', title:'📅 Availability', icon:'📅', keys:['student','gradYear','otherJob','otherJobDesc','jobType','lastDay','transport','bank','hoursOkay','startNow','startDate'] },
   ];
 
   // Everything BELOW the schedule grid
   const sections = [
     { id:'availability-bottom', title:'📅 Availability', icon:'📅', keys:['machineCleaning','schedNotes','hoursPreferred','hoursMinimum'], noHeader:true },
-    { id:'experience', title:'💼 Experience', icon:'💼', keys:['currentlyEmployed','currentCompany','currentTitle','currentLength','currentReason','recentCompany','recentTitle','recentWhen','recentLength','recentReason','foodExp'] },
+    { id:'experience', title:'💼 Experience', icon:'💼', keys:['currentlyEmployed','currentCompany','currentTitle','currentLength','currentReason','recentCompany','recentTitle','recentWhen','recentLength','recentReason','goodStanding','foodExp'] },
     { id:'expectations', title:'🍦 Job Expectations', icon:'🍦', keys:['comfortPhysical','comfortRush','notes'] },
     ...(customKeys.length ? [{ id:'custom', title:'📝 Additional Questions', icon:'📝', keys:customKeys }] : []),
   ];
@@ -569,7 +571,7 @@ document.getElementById('apply-form').addEventListener('submit', async (e) => {
   }
 
   // Manual check for all radio groups
-  const radioNames = ['student','otherJob','jobType','machineCleaning','transport','bank','startNow','currentlyEmployed','foodExp','comfortPhysical','comfortRush'];
+  const radioNames = ['student','otherJob','jobType','machineCleaning','transport','bank','startNow','hoursOkay','currentlyEmployed','goodStanding','foodExp','comfortPhysical','comfortRush'];
   for (const name of radioNames) {
     const el = e.target.querySelector(`input[name="${name}"]`);
     if (!el) continue;
