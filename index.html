@@ -264,12 +264,12 @@ function buildDynamicForm() {
     'machineCleaning','schedNotes','hoursPreferred','hoursMinimum',
     'currentlyEmployed','currentCompany','currentTitle','currentLength','currentReason',
     'recentCompany','recentTitle','recentWhen','recentLength','recentReason','foodExp',
-    'comfortPhysical','comfortRush','notes','hoursOkay','goodStanding'];
+    'comfortPhysical','comfortRush','notes','goodStanding'];
   const customKeys = enabledQuestions.filter(q => !knownKeys.includes(q.key)).map(q => q.key);
 
   // Availability questions ABOVE the schedule grid
   const topSections = [
-    { id:'availability-top', title:'📅 Availability', icon:'📅', keys:['student','gradYear','otherJob','otherJobDesc','jobType','lastDay','transport','bank','hoursOkay','startNow','startDate'] },
+    { id:'availability-top', title:'📅 Availability', icon:'📅', keys:['student','gradYear','otherJob','otherJobDesc','jobType','lastDay','transport','bank','startNow','startDate'] },
   ];
 
   // Everything BELOW the schedule grid
