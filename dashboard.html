@@ -574,7 +574,7 @@ function renderProfile(c) {
     'machineCleaning','schedNotes','hoursPreferred','hoursMinimum',
     'currentlyEmployed','currentCompany','currentTitle','currentLength','currentReason',
     'recentCompany','recentTitle','recentWhen','recentLength','recentReason','foodExp',
-    'comfortPhysical','comfortRush','notes','interviewDate','interviewTime','interviewNotes',
+    'comfortPhysical','comfortRush','notes','hoursOkay','goodStanding','interviewDate','interviewTime','interviewNotes',
     'interviewerName','enjoyWorking','trustClosing','coachability','hireDecision','vibeNotes','id',
     'monShift','tueShift','wedShift','thuShift','friShift','satShift','sunShift',
     'satUnavail','sunUnavail','mondayUnavail','tuesdayUnavail','wednesdayUnavail','thursdayUnavail','fridayUnavail']);
@@ -653,6 +653,7 @@ function renderProfile(c) {
       <div class="data-row"><span class="label">Transportation</span><span class="value">${esc(c.transport||'—')}</span></div>
       <div class="data-row"><span class="label">Bank Account</span><span class="value">${esc(c.bank||'—')}</span></div>
       <div class="data-row"><span class="label">Start Immediately</span><span class="value">${esc(c.startNow||'—')}${c.startDate?' — '+esc(c.startDate):''}</span></div>
+      ${c.hoursOkay?`<div class="data-row"><span class="label">Okay with 15–20 hrs/wk</span><span class="value">${esc(c.hoursOkay)}</span></div>`:''}
       <div class="data-row"><span class="label">Machine Cleaning</span><span class="value">${esc(c.machineCleaning||'—')}</span></div>
       ${c.schedNotes?`<div class="data-row"><span class="label">Schedule Notes</span><span class="value">${esc(c.schedNotes)}</span></div>`:''}
       <div class="data-row"><span class="label">Hours</span><span class="value">${c.hoursPreferred?'Preferred: '+esc(c.hoursPreferred):''}${c.hoursMinimum?' · Min: '+esc(c.hoursMinimum):''}</span></div>
@@ -664,6 +665,7 @@ function renderProfile(c) {
     <div class="card">
       <div class="card-title">💼 Experience</div>
       ${expHTML||'<div class="data-row"><span class="label">Status</span><span class="value">—</span></div>'}
+      ${c.goodStanding?`<div class="data-row"><span class="label">Left in good standing?</span><span class="value">${esc(c.goodStanding)}</span></div>`:''}
       <div class="data-row"><span class="label">Food Industry Exp</span><span class="value">${esc(c.foodExp||'—')}</span></div>
     </div>
     <div class="card">
