@@ -202,13 +202,13 @@ const DEFAULT_SETTINGS = {
   motto: "Be on time, ready to learn, and work with a positive attitude.",
   locationName: "Westheimer",
   schedule: {
-    Monday:    { day: "12pm–6pm", eve: "6pm–10:30pm", locked: false },
-    Tuesday:   { day: "12pm–6pm", eve: "6pm–10:30pm", locked: false },
-    Wednesday: { day: "12pm–6pm", eve: "6pm–10:30pm", locked: false },
-    Thursday:  { day: "12pm–6pm", eve: "6pm–11:45pm", locked: false },
-    Friday:    { day: null,       eve: "6pm–10:30pm", locked: false, required: true, requiredShift: "evening" },
-    Saturday:  { day: "11:30am–6pm", eve: "6pm–11:30pm", locked: true },
-    Sunday:    { day: "11:30am–6pm", eve: "6pm–11:45pm", locked: true }
+    Monday:    { day: "12pm–6pm", eve: "6pm–10pm", locked: false },
+    Tuesday:   { day: "12pm–6pm", eve: "6pm–10pm", locked: false },
+    Wednesday: { day: "12pm–6pm", eve: "6pm–10pm", locked: false },
+    Thursday:  { day: "12pm–6pm", eve: "6pm–11pm", locked: false },
+    Friday:    { day: "12pm–6pm", eve: "6pm–11pm", locked: false, required: true, requiredShift: "evening" },
+    Saturday:  { day: "12pm–6pm", eve: "6pm–11pm", locked: true },
+    Sunday:    { day: "12pm–6pm", eve: "6pm–11pm", locked: true }
   }
 };
 
@@ -219,7 +219,7 @@ const DEFAULT_APP_QUESTIONS = [
   { key:'otherJobDesc', label:'Describe your other job & schedule', type:'text', placeholder:'e.g. Retail, Tues-Thurs 9am-3pm', required:false, enabled:true, conditional:'otherJob:Yes' },
   { key:'jobType', label:'Are you looking for a seasonal or long-term position?', type:'radio', options:['Long Term','Seasonal'], required:true, enabled:true },
   { key:'lastDay', label:'Expected last day', type:'date', required:false, enabled:true, conditional:'jobType:Seasonal' },
-  { key:'machineCleaning', label:'Machine cleaning is required for every employee once per week (6:00 PM – Midnight). Please select which night you are available for.', type:'radio', options:['Open to Both','Thursday Night','Sunday Night','Neither'], required:true, enabled:true },
+  { key:'machineCleaning', label:'Machine cleaning is required once per week. Please select which night you are available for.', type:'radio', options:['Open to Both','Thursday Night','Sunday Night','Neither'], required:true, enabled:true },
   { key:'schedNotes', label:'Scheduling Notes', type:'textarea', placeholder:"Any upcoming vacations or specific dates/times that won't work? If none, write 'None'.", required:true, enabled:true },
   { key:'hoursPreferred', label:'Preferred hours/week', type:'number', placeholder:'e.g. 20', required:true, enabled:true },
   { key:'hoursMinimum', label:'Minimum hours/week', type:'number', placeholder:'e.g. 10', required:true, enabled:true },
