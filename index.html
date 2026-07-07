@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomiSomi Westheimer — Apply Now</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --surface-alt: #F3F4F6;
+  --border: #E5E7EB;
+  --border-focus: #E8572A;
+  --text: #111827;
+  --text-soft: #374151;
+  --text-xs: #6B7280;
+  --accent: #E8572A;
+  --accent-hover: #D04A20;
+  --accent-light: #FEF3EF;
+  --green: #059669;
+  --green-light: #ECFDF5;
+  --yellow: #D97706;
+  --yellow-light: #FFFBEB;
+  --red: #DC2626;
+  --red-light: #FEF2F2;
+  --radius: 8px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; font-size:14px; }
+.container { max-width:640px; margin:0 auto; padding:20px 16px 60px; }
+h1,h2,h3 { font-family:'Fraunces',serif; }
+
+/* Header */
+.page-header { text-align:center; padding:28px 0 20px; }
+.page-header .logo { font-family:'Fraunces',serif; font-size:24px; font-weight:800; color:var(--accent); letter-spacing:-0.5px; }
+.page-header h1 { font-size:18px; font-weight:600; margin-top:2px; color:var(--text); }
+.page-header p { color:var(--text-soft); margin-top:4px; font-size:13px; }
+
+/* Cards */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:10px; box-shadow:var(--shadow); }
+.card-title { font-size:13px; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:7px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-soft); }
+.card-title .icon { font-size:13px; }
+
+/* Fields */
+.field { margin-bottom:12px; }
+.field-hidden { display:none !important; }
+.field:last-child { margin-bottom:0; }
+.field label { display:block; font-size:12px; font-weight:600; color:var(--text-soft); margin-bottom:5px; letter-spacing:0.2px; text-transform:uppercase; }
+.field label .req { color:var(--accent); margin-left:2px; }
+
+input[type="text"],input[type="email"],input[type="tel"],input[type="date"],input[type="number"],select,textarea {
+  width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius-sm);
+  font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text);
+  background:var(--surface); transition:border-color 0.15s,box-shadow 0.15s; outline:none;
+}
+input:focus,select:focus,textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+textarea { resize:vertical; min-height:72px; }
+.row { display:grid; gap:10px; }
+.row-2 { grid-template-columns:1fr 1fr; }
+
+/* Radio pills */
+.radio-group { display:flex; gap:6px; flex-wrap:wrap; }
+.radio-group label {
+  display:flex; align-items:center; gap:5px; font-size:13px; font-weight:500;
+  cursor:pointer; padding:6px 12px; border:1px solid var(--border); border-radius:var(--radius-sm);
+  transition:all 0.15s; user-select:none; color:var(--text-soft); background:var(--surface);
+}
+.radio-group label:has(input:checked) {
+  border-color:var(--accent); background:var(--accent-light); color:var(--accent); font-weight:600;
+}
+.radio-group input { display:none; }
+
+/* Submit */
+.btn-primary {
+  display:flex; align-items:center; justify-content:center;
+  padding:12px; border:none; border-radius:var(--radius-sm); font-family:'DM Sans',sans-serif;
+  font-size:15px; font-weight:600; cursor:pointer; transition:all 0.15s;
+  background:var(--accent); color:#fff; width:100%;
+}
+.btn-primary:hover { background:var(--accent-hover); }
+.btn-primary:disabled { opacity:0.6; cursor:not-allowed; }
+
+/* Info/warning boxes */
+.info-box { background:var(--surface-alt); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; font-size:13px; line-height:1.5; color:var(--text-soft); }
+.warning-box { background:var(--red-light); border:1px solid #FECACA; border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; line-height:1.5; color:var(--red); display:none; margin-top:8px; }
+.notice-box { background:var(--yellow-light); border:1px solid #FDE68A; border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; line-height:1.5; color:var(--yellow); margin-bottom:10px; }
+
+/* Toast */
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px); background:#111827; color:#fff; padding:10px 20px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; box-shadow:var(--shadow-md); z-index:1000; transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Schedule */
+.schedule-grid { display:flex; flex-direction:column; gap:4px; }
+.sched-row { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:7px 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.sched-row .day-label { font-weight:600; font-size:12px; width:80px; flex-shrink:0; color:var(--text); text-transform:uppercase; letter-spacing:0.3px; }
+.sched-shifts { display:flex; gap:5px; flex-wrap:wrap; flex:1; }
+.sched-shifts label { display:flex; align-items:center; justify-content:center; gap:2px; font-size:12px; font-weight:500; cursor:pointer; padding:6px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); transition:all 0.15s; user-select:none; background:var(--surface); color:var(--text-soft); text-align:center; min-width:64px; }
+.sched-shifts label:has(input:checked) { border-color:var(--accent); background:var(--accent-light); color:var(--accent); font-weight:600; }
+.sched-shifts input { display:none; }
+.sched-row .warning-box { flex-basis:100%; margin-top:4px; }
+
+/* Locked pills */
+.locked-pill { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600; padding:4px 10px; border:1px solid #D1FAE5; border-radius:var(--radius-sm); background:var(--green-light); color:var(--green); }
+
+/* Divider */
+.divider { border:none; border-top:1px solid var(--border); margin:12px 0; }
+
+/* Field error */
+.field-error { outline:2px solid var(--red); outline-offset:3px; border-radius:var(--radius-sm); }
+
+/* Loading */
+.loading-screen { display:flex; align-items:center; justify-content:center; min-height:50vh; flex-direction:column; gap:10px; }
+.spinner { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+@media(max-width:600px) { .row-2 { grid-template-columns:1fr; } .sched-row .day-label { width:100%; margin-bottom:2px; } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.card { animation:fadeUp 0.25s ease both; }
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<div id="loading" class="container">
+  <div class="loading-screen"><div class="spinner"></div><p style="color:var(--text-soft)">Loading...</p></div>
+</div>
+
+<div id="view-apply" style="display:none">
+  <div class="container">
+    <div class="page-header">
+      <img src="logo.png" alt="SomiSomi" style="max-width:220px;height:auto;margin:0 auto;display:block;">
+      <h1>Job Application</h1>
+      <p id="location-text">Westheimer Location — Please fill out the form below!</p>
+    </div>
+    <form id="apply-form">
+      <div class="card">
+        <div class="card-title"><span class="icon">👤</span> Contact Information</div>
+        <div class="row row-2">
+          <div class="field"><label>Full Name *</label><input type="text" name="name" required placeholder="First and Last"></div>
+          <div class="field"><label>Phone Number *</label><input type="tel" name="phone" required placeholder="(000) 000-0000"></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label>Email *</label><input type="email" name="email" required placeholder="you@email.com"></div>
+      </div>
+
+      <div id="dynamic-form-fields-top"></div>
+
+      <div class="card" id="schedule-card">
+        <div class="card-title"><span class="icon">📅</span> Available Days &amp; Shifts</div>
+        <div class="schedule-grid" id="schedule-grid">
+          <!-- Dynamically built from Firebase settings -->
+        </div>
+      </div>
+
+      <div id="dynamic-form-fields"></div>
+
+      <div class="card" id="pay-card">
+        <div class="info-box">
+          <strong>💵 Pay Info</strong><br><br>
+          <span id="pay-info-text">Loading pay info...</span><br><br>
+          <strong>Our Motto:</strong> <span id="motto-text">Be on time, ready to learn, and work with a positive attitude.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="apply-btn">Submit Application</button>
+    </form>
+  </div>
+</div>
+
+<div id="view-thankyou" style="display:none">
+  <div class="container" style="display:flex;align-items:center;justify-content:center;min-height:70vh;">
+    <div style="text-align:center;">
+      <div style="font-size:56px;margin-bottom:16px;">🎉</div>
+      <h1 style="font-family:'Fraunces',serif;font-size:26px;margin-bottom:8px;">Application Submitted!</h1>
+      <p style="color:var(--text-soft);font-size:16px;max-width:400px;margin:0 auto;line-height:1.6;">Thank you for applying to SomiSomi! We'll review your application and reach out about next steps.</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCPCaPkMTaig9oNAfIJc1Za9fIWVl-cjcY",
+  authDomain: "somisomi-hiring.firebaseapp.com",
+  projectId: "somisomi-hiring",
+  storageBucket: "somisomi-hiring.firebasestorage.app",
+  messagingSenderId: "6359504148",
+  appId: "1:6359504148:web:5ae570e52298062dd65e01"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Default settings fallback
+const DEFAULT_SETTINGS = {
+  payInfo: "$7.25/hour for your first 35 training hours. After training you will receive tips which put you anywhere between $11–$14/hr.",
+  motto: "Be on time, ready to learn, and work with a positive attitude.",
+  locationName: "Westheimer",
+  schedule: {
+    Monday:    { day: "12pm–6pm", eve: "6pm–10:30pm", locked: false },
+    Tuesday:   { day: "12pm–6pm", eve: "6pm–10:30pm", locked: false },
+    Wednesday: { day: "12pm–6pm", eve: "6pm–10:30pm", locked: false },
+    Thursday:  { day: "12pm–6pm", eve: "6pm–11:45pm", locked: false },
+    Friday:    { day: null,       eve: "6pm–10:30pm", locked: false, required: true, requiredShift: "evening" },
+    Saturday:  { day: "11:30am–6pm", eve: "6pm–11:30pm", locked: true },
+    Sunday:    { day: "11:30am–6pm", eve: "6pm–11:45pm", locked: true }
+  }
+};
+
+const DEFAULT_APP_QUESTIONS = [
+  { key:'student', label:'Are you currently a student?', type:'radio', options:['No','Yes - High School','Yes - College'], required:true, enabled:true },
+  { key:'gradYear', label:'Expected Graduation Year', type:'select', options:['2025','2026','2027','2028','2029','2030'], required:false, enabled:true, conditional:'student:Yes - High School|Yes - College' },
+  { key:'otherJob', label:'Any other jobs or commitments?', type:'radio', options:['No','Yes'], required:true, enabled:true },
+  { key:'otherJobDesc', label:'Describe your other job & schedule', type:'text', placeholder:'e.g. Retail, Tues-Thurs 9am-3pm', required:false, enabled:true, conditional:'otherJob:Yes' },
+  { key:'jobType', label:'Are you looking for a seasonal or long-term position?', type:'radio', options:['Long Term','Seasonal'], required:true, enabled:true },
+  { key:'lastDay', label:'Expected last day', type:'date', required:false, enabled:true, conditional:'jobType:Seasonal' },
+  { key:'machineCleaning', label:'Machine cleaning is required for every employee once per week (6:00 PM – Midnight). Please select which night you are available for.', type:'radio', options:['Open to Both','Thursday Night','Sunday Night','Neither'], required:true, enabled:true },
+  { key:'schedNotes', label:'Scheduling Notes', type:'textarea', placeholder:"Any upcoming vacations or specific dates/times that won't work? If none, write 'None'.", required:true, enabled:true },
+  { key:'hoursPreferred', label:'Preferred hours/week', type:'number', placeholder:'e.g. 20', required:true, enabled:true },
+  { key:'hoursMinimum', label:'Minimum hours/week', type:'number', placeholder:'e.g. 10', required:true, enabled:true },
+  { key:'transport', label:'Do you have reliable transportation?', type:'radio', options:['Yes - own car','Yes - shared car','Yes - rideshare/bus','No'], required:true, enabled:true },
+  { key:'bank', label:'Bank account for direct deposit?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'startNow', label:'Can you start immediately?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'startDate', label:'When can you start?', type:'date', required:false, enabled:true, conditional:'startNow:No' },
+  { key:'currentlyEmployed', label:"What's your work experience?", type:'radio', options:['Currently employed','Previously employed','First job'], required:true, enabled:true },
+  { key:'currentCompany', label:'Current Company', type:'text', placeholder:'e.g. Target', required:true, enabled:true, conditional:'currentlyEmployed:Currently employed' },
+  { key:'currentTitle', label:'Current Job Title', type:'text', placeholder:'e.g. Cashier', required:true, enabled:true, conditional:'currentlyEmployed:Currently employed' },
+  { key:'currentLength', label:'How long have you been there?', type:'text', placeholder:'e.g. 6 months', required:true, enabled:true, conditional:'currentlyEmployed:Currently employed' },
+  { key:'currentReason', label:'Reason for leaving?', type:'text', placeholder:'e.g. Looking for new opportunities', required:true, enabled:true, conditional:'currentlyEmployed:Currently employed' },
+  { key:'recentCompany', label:'Most Recent Company', type:'text', placeholder:'e.g. Target', required:true, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'recentTitle', label:'Most Recent Job Title', type:'text', placeholder:'e.g. Cashier', required:true, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'recentWhen', label:'How long ago?', type:'text', placeholder:'e.g. 3 months ago', required:true, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'recentLength', label:'How long were you there?', type:'text', placeholder:'e.g. 1 year', required:true, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'recentReason', label:'Reason for leaving?', type:'text', placeholder:'e.g. Moved', required:true, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'foodExp', label:'Any food industry experience?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'comfortPhysical', label:'Comfortable standing for long periods, doing food prep, and cleaning?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'comfortRush', label:'Comfortable handling busy rushes and difficult customers?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'notes', label:"Tell us about yourself and why you're interested in this job", type:'textarea', placeholder:"e.g. I'm a fast learner, love customer service...", required:true, enabled:true },
+];
+
+let settings = DEFAULT_SETTINGS;
+let appQuestions = DEFAULT_APP_QUESTIONS;
+
+function buildDynamicForm() {
+  const container = document.getElementById('dynamic-form-fields');
+  const topContainer = document.getElementById('dynamic-form-fields-top');
+  if (!container) return;
+  container.innerHTML = '';
+  if (topContainer) topContainer.innerHTML = '';
+
+  const enabledQuestions = appQuestions.filter(q => q.enabled !== false);
+  const keyToQ = {};
+  enabledQuestions.forEach(q => keyToQ[q.key] = q);
+
+  // Detect custom questions not in known sections
+  const knownKeys = ['student','gradYear','otherJob','otherJobDesc','jobType','lastDay','transport','bank','startNow','startDate',
+    'machineCleaning','schedNotes','hoursPreferred','hoursMinimum',
+    'currentlyEmployed','currentCompany','currentTitle','currentLength','currentReason',
+    'recentCompany','recentTitle','recentWhen','recentLength','recentReason','foodExp',
+    'comfortPhysical','comfortRush','notes'];
+  const customKeys = enabledQuestions.filter(q => !knownKeys.includes(q.key)).map(q => q.key);
+
+  // Availability questions ABOVE the schedule grid
+  const topSections = [
+    { id:'availability-top', title:'📅 Availability', icon:'📅', keys:['student','gradYear','otherJob','otherJobDesc','jobType','lastDay','transport','bank','startNow','startDate'] },
+  ];
+
+  // Everything BELOW the schedule grid
+  const sections = [
+    { id:'availability-bottom', title:'📅 Availability', icon:'📅', keys:['machineCleaning','schedNotes','hoursPreferred','hoursMinimum'], noHeader:true },
+    { id:'experience', title:'💼 Experience', icon:'💼', keys:['currentlyEmployed','currentCompany','currentTitle','currentLength','currentReason','recentCompany','recentTitle','recentWhen','recentLength','recentReason','foodExp'] },
+    { id:'expectations', title:'🍦 Job Expectations', icon:'🍦', keys:['comfortPhysical','comfortRush','notes'] },
+    ...(customKeys.length ? [{ id:'custom', title:'📝 Additional Questions', icon:'📝', keys:customKeys }] : []),
+  ];
+
+  // Render top availability questions (above schedule grid)
+  topSections.forEach(section => {
+    const sectionQs = section.keys.map(k => keyToQ[k]).filter(Boolean);
+    if (!sectionQs.length) return;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="card-title"><span class="icon">${section.icon}</span> ${section.title.replace(section.icon,'').trim()}</div>`;
+    sectionQs.forEach(q => { const field = buildField(q); if (field) card.appendChild(field); });
+    if (topContainer) topContainer.appendChild(card);
+  });
+
+  // Render bottom sections (below schedule grid)
+  // Merge consecutive sections with same title into one card
+  let lastTitle = null;
+  let lastCard = null;
+  sections.forEach(section => {
+    const sectionQs = section.keys.map(k => keyToQ[k]).filter(Boolean);
+    if (!sectionQs.length) return;
+
+    if (section.title === lastTitle && lastCard) {
+      // Append to existing card instead of creating new one
+      sectionQs.forEach(q => { const field = buildField(q); if (field) lastCard.appendChild(field); });
+    } else {
+      const card = document.createElement('div');
+      card.className = 'card';
+      if (!section.noHeader) {
+        card.innerHTML = `<div class="card-title"><span class="icon">${section.icon}</span> ${section.title.replace(section.icon,'').trim()}</div>`;
+      }
+      const hourKeys = ['hoursPreferred','hoursMinimum'];
+      let hourRow = null;
+      sectionQs.forEach(q => {
+        if (hourKeys.includes(q.key)) {
+          if (!hourRow) { hourRow = document.createElement('div'); hourRow.className = 'row row-2'; card.appendChild(hourRow); }
+          const field = buildField(q); if (field) hourRow.appendChild(field);
+        } else {
+          hourRow = null;
+          const field = buildField(q); if (field) card.appendChild(field);
+        }
+      });
+      container.appendChild(card);
+      lastCard = card;
+      lastTitle = section.title;
+    }
+  });
+
+
+
+  setupConditionals();
+}
+
+function buildField(q) {
+  const div = document.createElement('div');
+  div.className = 'field';
+  div.dataset.key = q.key;
+  if (q.conditional) {
+    div.dataset.conditional = q.conditional;
+    div.setAttribute('style', 'display:none !important');
+  }
+
+  const label = document.createElement('label');
+  label.textContent = q.label + (q.required ? ' *' : '');
+  div.appendChild(label);
+
+  if (q.type === 'radio') {
+    const group = document.createElement('div');
+    group.className = 'radio-group';
+    (q.options||[]).forEach(opt => {
+      const lbl = document.createElement('label');
+      const inp = document.createElement('input');
+      inp.type = 'radio'; inp.name = q.key; inp.value = opt;
+      inp.addEventListener('change', () => handleConditional(q.key, opt));
+      if (q.key === 'machineCleaning') inp.addEventListener('change', () => {
+        document.getElementById('machineCleaningWarning') && (document.getElementById('machineCleaningWarning').style.display = opt==='Neither'?'block':'none');
+      });
+      lbl.appendChild(inp);
+      lbl.appendChild(document.createTextNode(' '+opt));
+      group.appendChild(lbl);
+    });
+    div.appendChild(group);
+    if (q.key === 'machineCleaning') {
+      const warn = document.createElement('div');
+      warn.className = 'warning-box'; warn.id = 'machineCleaningWarning';
+      warn.innerHTML = '⚠️ <strong>Machine cleaning is a required part of the job.</strong> Not being available may affect your eligibility.';
+      div.appendChild(warn);
+    }
+  } else if (q.type === 'select') {
+    const sel = document.createElement('select');
+    sel.name = q.key;
+    const def = document.createElement('option'); def.value=''; def.textContent='Select...'; sel.appendChild(def);
+    (q.options||[]).forEach(opt => { const o=document.createElement('option');o.value=opt;o.textContent=opt;sel.appendChild(o); });
+    div.appendChild(sel);
+  } else if (q.type === 'textarea') {
+    const ta = document.createElement('textarea');
+    ta.name = q.key; if(q.placeholder) ta.placeholder = q.placeholder;
+    div.appendChild(ta);
+  } else {
+    const inp = document.createElement('input');
+    inp.type = q.type||'text'; inp.name = q.key;
+    if(q.placeholder) inp.placeholder = q.placeholder;
+    div.appendChild(inp);
+  }
+
+  return div;
+}
+
+function setupConditionals() {
+  // Hide all conditional fields initially
+  document.querySelectorAll('[data-conditional]').forEach(field => {
+    field.setAttribute('style', 'display:none !important');
+    field.querySelectorAll('input,select,textarea').forEach(inp => {
+      inp.required = false;
+    });
+  });
+}
+
+function handleConditional(key, value) {
+  document.querySelectorAll('[data-conditional]').forEach(field => {
+    const cond = field.dataset.conditional;
+    if (!cond) return;
+    const colonIdx = cond.indexOf(':');
+    const condKey = cond.substring(0, colonIdx);
+    const condVals = cond.substring(colonIdx + 1).split('|');
+    if (condKey !== key) return;
+    const show = condVals.includes(value);
+    if (show) { field.removeAttribute('style'); field.style.display = 'block'; }
+    else { 
+      field.setAttribute('style', 'display:none !important');
+      // Clear values when hiding so stale data isn't submitted
+      field.querySelectorAll('input,select,textarea').forEach(inp => {
+        if (inp.type === 'radio' || inp.type === 'checkbox') inp.checked = false;
+        else inp.value = '';
+      });
+    }
+    const q = appQuestions.find(qq=>qq.key===field.dataset.key);
+    const shouldRequire = show && q?.required === true;
+    field.querySelectorAll('input,select,textarea').forEach(inp => {
+      inp.required = shouldRequire;
+    });
+    // Update label to show/hide asterisk
+    const lbl = field.querySelector('label');
+    if (lbl && q) {
+      lbl.textContent = q.label + (shouldRequire ? ' *' : '');
+    }
+  });
+}
+
+async function loadSettings() {
+  try {
+    const [settingsSnap, appFormSnap] = await Promise.all([
+      getDoc(doc(db, 'config-westheimer', 'settings')),
+      getDoc(doc(db, 'config-westheimer', 'appForm')),
+    ]);
+    if (settingsSnap.exists()) {
+      settings = { ...DEFAULT_SETTINGS, ...settingsSnap.data() };
+      if (!settings.schedule) settings.schedule = DEFAULT_SETTINGS.schedule;
+    }
+    if (appFormSnap.exists()) {
+      const saved = appFormSnap.data().questions || [];
+      // Merge saved questions with defaults to preserve conditional logic
+      const defaultMap = {};
+      DEFAULT_APP_QUESTIONS.forEach(q => defaultMap[q.key] = q);
+      appQuestions = saved.map(q => {
+        const def = defaultMap[q.key] || {};
+        const merged = { ...def, ...q };
+        // Always preserve conditional and required from default
+        if (def.conditional) merged.conditional = def.conditional;
+        else delete merged.conditional;
+        if (def.conditional && def.required) merged.required = true;
+        return merged;
+      });
+    }
+  } catch(e) { console.warn('Using default settings', e); }
+
+  // Apply settings to page
+  document.getElementById('pay-info-text').textContent = settings.payInfo;
+  document.getElementById('motto-text').textContent = settings.motto;
+  document.getElementById('location-text').textContent = `${settings.locationName} Location — Please fill out the form below!`;
+  buildScheduleGrid();
+  buildDynamicForm();
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('view-apply').style.display = 'block';
+}
+
+function buildScheduleGrid() {
+  const grid = document.getElementById('schedule-grid');
+  grid.innerHTML = '';
+  const sched = settings.schedule;
+
+  const dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const sortedEntries = dayOrder.map(d => [d, sched[d]]).filter(([,v]) => v);
+  sortedEntries.forEach(([day, cfg]) => {
+    const row = document.createElement('div');
+    row.className = 'sched-row';
+    row.dataset.day = day;
+
+    const nameKey = day.toLowerCase().slice(0,3) + 'Shift';
+    const note = cfg.required ? `<span style="display:block;font-weight:400;font-size:11px;color:var(--text-soft);font-style:italic;">Must be available<br>Friday night</span>` : '';
+
+    const lockedNote = cfg.locked ? `<span style="display:block;font-weight:400;font-size:11px;color:var(--text-soft);font-style:italic;">Must be available<br>all day</span>` : '';
+    let label = `<div class="day-label" style="width:auto;">${day}${note}${lockedNote}</div>`;
+    let shifts = `<div class="sched-shifts">`;
+
+    if (cfg.locked) {
+      shifts += `<label class="locked-pill" style="cursor:not-allowed;flex-direction:column;gap:1px;"><input type="checkbox" checked disabled><span>All Day</span><span style="font-size:10px;">${formatTime(cfg.day)} – ${formatTime(cfg.eve)}</span></label>`;
+      shifts += `<label style="flex-direction:column;gap:1px;"><input type="checkbox" name="${day.toLowerCase()}Unavail" value="unavailable" onchange="handleLockedDay('${day.toLowerCase()}')"><span>Can't work</span></label>`;
+      shifts += `</div>`;
+      shifts += `<div class="warning-box" id="${day.toLowerCase()}Warning">⚠️ <strong>Full ${day} availability is required.</strong> Not being available may affect your eligibility. You may still submit and we will review it.</div>`;
+    } else if (cfg.required) {
+      shifts += `<label style="flex-direction:column;gap:1px;"><input type="radio" name="${nameKey}" value="allday" onchange="handleRequiredDay(this,'${day.toLowerCase()}')"><span>${cfg.allDayLabel||'All Day'}</span></label>`;
+      if (cfg.eve) shifts += `<label style="flex-direction:column;gap:1px;"><input type="radio" name="${nameKey}" value="${cfg.eve}" onchange="handleRequiredDay(this,'${day.toLowerCase()}')"><span>Evening</span><span style="font-size:10px;color:var(--text-xs)">${formatTime(cfg.eve)}</span></label>`;
+      shifts += `<label style="flex-direction:column;gap:1px;"><input type="radio" name="${nameKey}" value="unavailable" onchange="handleRequiredDay(this,'${day.toLowerCase()}')"><span>${cfg.unavailLabel||'Unavailable'}</span></label>`;
+      shifts += `</div>`;
+      shifts += `<div class="warning-box" id="${day.toLowerCase()}Warning">⚠️ <strong>Friday evening availability is required.</strong> Not being available may affect your eligibility. You may still submit and we will review it.</div>`;
+    } else {
+      shifts += `<label style="flex-direction:column;gap:1px;"><input type="radio" name="${nameKey}" value="allday"><span>${cfg.allDayLabel||'Available All Day'}</span></label>`;
+      if (cfg.day) shifts += `<label style="flex-direction:column;gap:1px;"><input type="radio" name="${nameKey}" value="${cfg.day}"><span>Day</span><span style="font-size:10px;color:var(--text-xs)">${formatTime(cfg.day)}</span></label>`;
+      if (cfg.eve) shifts += `<label style="flex-direction:column;gap:1px;"><input type="radio" name="${nameKey}" value="${cfg.eve}"><span>Evening</span><span style="font-size:10px;color:var(--text-xs)">${formatTime(cfg.eve)}</span></label>`;
+      shifts += `<label style="flex-direction:column;gap:1px;"><input type="radio" name="${nameKey}" value="unavailable"><span>${cfg.unavailLabel||'Unavailable'}</span></label>`;
+      shifts += `</div>`;
+    }
+
+    row.innerHTML = label + shifts;
+    grid.appendChild(row);
+  });
+}
+
+function formatTime(t) {
+  if (!t) return '';
+  return t.replace('am','AM').replace('pm','PM').replace('–','–');
+}
+
+function getScheduleData() {
+  const sched = settings.schedule;
+  const parts = [];
+  Object.entries(sched).forEach(([day, cfg]) => {
+    const key = day.toLowerCase().slice(0,3) + 'Shift';
+    if (cfg.locked) {
+      const unavail = document.querySelector(`input[name="${day.toLowerCase()}Unavail"]`);
+      parts.push(`${day}: ${unavail && unavail.checked ? 'Not available' : 'Available all day'}`);
+    } else {
+      const sel = document.querySelector(`input[name="${key}"]:checked`);
+      parts.push(`${day}: ${sel ? sel.value : 'No answer'}`);
+    }
+  });
+  return parts.join(' | ');
+}
+
+// Form handlers - all handled dynamically via handleConditional
+window.handleStudent = (r) => handleConditional('student', r.value);
+window.handleOtherJob = (r) => handleConditional('otherJob', r.value);
+window.handleJobType = (r) => handleConditional('jobType', r.value);
+window.handleStartNow = (r) => handleConditional('startNow', r.value);
+window.handleEmployed = (r) => handleConditional('currentlyEmployed', r.value);
+
+window.handleLockedDay = (prefix) => {
+  const unavail = document.querySelector(`input[name="${prefix}Unavail"]`);
+  const warn = document.getElementById(prefix + 'Warning');
+  if (warn) warn.style.display = unavail && unavail.checked ? 'block' : 'none';
+};
+
+window.handleRequiredDay = (r, prefix) => {
+  const warn = document.getElementById(prefix + 'Warning');
+  if (warn) warn.style.display = r.value === 'unavailable' ? 'block' : 'none';
+};
+
+window.handleMachineCleaning = (r) => {
+  const warn = document.getElementById('machineCleaningWarning');
+  if (warn) warn.style.display = r.value === 'Neither' ? 'block' : 'none';
+};
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+document.getElementById('apply-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+
+  // Manual check for Friday shift (required day)
+  const friChecked = document.querySelector('input[name="friShift"]:checked');
+  if (friChecked === null && document.querySelector('input[name="friShift"]')) {
+    const friRow = document.querySelector('.sched-row[data-day="Friday"]');
+    if (friRow) { friRow.classList.add('field-error'); friRow.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    showToast('Please select your availability for Friday.');
+    return;
+  }
+
+  // Manual check for all radio groups
+  const radioNames = ['student','otherJob','jobType','machineCleaning','transport','bank','startNow','currentlyEmployed','foodExp','comfortPhysical','comfortRush'];
+  for (const name of radioNames) {
+    const el = e.target.querySelector(`input[name="${name}"]`);
+    if (!el) continue;
+    const checked = e.target.querySelector(`input[name="${name}"]:checked`);
+    if (!checked) {
+      const field = el.closest('.field') || el.closest('.card');
+      if (field) { field.classList.add('field-error'); field.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      const lbl = el.closest('.field')?.querySelector('label');
+      showToast(lbl ? `Please complete: ${lbl.textContent.replace('*','').trim()}` : 'Please complete all required fields.');
+      return;
+    }
+  }
+
+  // Manual check for schedule days
+  const sched = settings.schedule;
+  for (const [day, cfg] of Object.entries(sched)) {
+    if (!cfg.locked) {
+      const key = day.toLowerCase().slice(0,3) + 'Shift';
+      const checked = document.querySelector(`input[name="${key}"]:checked`);
+      if (!checked) {
+        const row = document.querySelector(`.sched-row[data-day="${day}"]`);
+        if (row) { row.classList.add('field-error'); row.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        showToast(`Please select your availability for ${day}.`);
+        return;
+      }
+    }
+  }
+
+  // Check other required fields
+  const requiredEls = e.target.querySelectorAll('[required]');
+  const checkedNames = new Set();
+  for (const el of requiredEls) {
+    if (el.disabled) continue;
+    // Skip hidden fields
+    const parentField = el.closest('.field');
+    if (parentField && parentField.style.display === 'none') continue;
+    if (parentField && parentField.getAttribute('style') && parentField.getAttribute('style').includes('none')) continue;
+    if (el.type === 'radio' || el.type === 'checkbox') {
+      if (checkedNames.has(el.name)) continue;
+      checkedNames.add(el.name);
+      if (!e.target.querySelector(`input[name="${el.name}"]:checked`)) {
+        const field = el.closest('.field') || el.closest('.card');
+        if (field) { field.classList.add('field-error'); field.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        const lbl = el.closest('.field')?.querySelector('label');
+        showToast(lbl ? `Please complete: ${lbl.textContent.replace('*','').trim()}` : 'Please complete all required fields.');
+        return;
+      }
+    } else if (!el.value.trim()) {
+      el.classList.add('field-error');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const lbl = el.closest('.field')?.querySelector('label');
+      showToast(lbl ? `Please complete: ${lbl.textContent.replace('*','').trim()}` : 'Please complete all required fields.');
+      return;
+    }
+  }
+
+  const btn = document.getElementById('apply-btn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  const fd = new FormData(e.target);
+  const data = { status: 'Applied', timestamp: serverTimestamp(), days: getScheduleData(), store: 'westheimer' };
+  for (const [key, val] of fd.entries()) data[key] = val;
+
+  try {
+    await addDoc(collection(db, 'westheimer-candidates'), data);
+    document.getElementById('view-apply').style.display = 'none';
+    document.getElementById('view-thankyou').style.display = 'block';
+    window.scrollTo(0, 0);
+  } catch (err) {
+    console.error(err);
+    showToast('Error submitting. Please try again.');
+    btn.disabled = false; btn.textContent = 'Submit Application';
+  }
+});
+
+loadSettings();
+</script>
+</body>
+</html>
