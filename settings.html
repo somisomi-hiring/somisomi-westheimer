@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomiSomi Westheimer — Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F7F8FA;--surface:#FFFFFF;--surface-alt:#F3F4F6;--border:#E5E7EB;
+  --text:#111827;--text-soft:#374151;--text-xs:#6B7280;
+  --accent:#E8572A;--accent-hover:#D04A20;--accent-light:#FEF3EF;
+  --green:#059669;--green-light:#ECFDF5;--red:#DC2626;--red-light:#FEF2F2;
+  --yellow:#D97706;--yellow-light:#FFFBEB;--blue:#2563EB;--blue-light:#EFF6FF;
+  --radius:8px;--radius-sm:6px;
+  --shadow:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 2px 8px rgba(0,0,0,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;font-size:14px;}
+.container{max-width:800px;margin:0 auto;padding:24px 16px 80px;}
+h1,h2,h3{font-family:'Fraunces',serif;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px;box-shadow:var(--shadow);}
+.field{margin-bottom:12px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text-soft);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.3px;}
+input[type="text"],input[type="password"],input[type="number"],select,textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border-color 0.15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);}
+textarea{resize:vertical;min-height:60px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:var(--accent-hover);}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--surface-alt);}
+.btn-danger{background:var(--red-light);color:var(--red);border:1px solid #FECACA;}
+.btn-danger:hover{background:#FEE2E2;}
+.btn-success{background:var(--green-light);color:var(--green);border:1px solid #A7F3D0;}
+.btn-sm{padding:5px 10px;font-size:12px;}
+.btn-icon{padding:6px;width:30px;height:30px;border-radius:var(--radius-sm);}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:10px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;box-shadow:var(--shadow-md);z-index:1000;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:40px auto;display:block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Login */
+#view-login{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.login-card{width:100%;max-width:320px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow-md);}
+.pin-input{text-align:center;font-size:22px;letter-spacing:8px;font-weight:700;}
+.login-error{color:var(--red);font-size:13px;margin-top:8px;display:none;}
+
+/* Nav */
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
+.section-nav{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px;}
+.nav-btn{padding:7px 14px;border:none;border-radius:6px;background:transparent;font-family:'DM Sans';font-size:13px;font-weight:500;color:var(--text-soft);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.nav-btn.active{background:var(--accent);color:#fff;font-weight:600;}
+.settings-section{display:none;}
+.settings-section.active{display:block;}
+
+/* Question builder */
+.question-list{display:flex;flex-direction:column;gap:8px;}
+.question-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;align-items:flex-start;gap:10px;transition:all 0.15s;}
+.question-item.disabled{opacity:0.5;}
+.question-item:hover{border-color:#D1D5DB;box-shadow:var(--shadow);}
+.drag-handle{color:#9CA3AF;cursor:grab;font-size:16px;padding-top:2px;flex-shrink:0;user-select:none;}
+.drag-handle:active{cursor:grabbing;}
+.question-item.dragging{opacity:0.4;border-style:dashed;}
+.question-item.drag-over{border-color:var(--accent);background:var(--accent-light);}
+.q-body{flex:1;min-width:0;}
+.q-label{font-weight:600;font-size:14px;margin-bottom:2px;}
+.q-meta{font-size:12px;color:var(--text-xs);}
+.q-actions{display:flex;gap:4px;flex-shrink:0;}
+.toggle-switch{position:relative;width:36px;height:20px;flex-shrink:0;margin-top:2px;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#D1D5DB;border-radius:20px;cursor:pointer;transition:0.2s;}
+.toggle-slider:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background:white;border-radius:50%;transition:0.2s;}
+.toggle-switch input:checked + .toggle-slider{background:var(--green);}
+.toggle-switch input:checked + .toggle-slider:before{transform:translateX(16px);}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;}
+.modal{background:var(--surface);border-radius:var(--radius);padding:24px;width:100%;max-width:480px;box-shadow:var(--shadow-md);max-height:90vh;overflow-y:auto;}
+.modal h3{font-family:'Fraunces',serif;font-size:17px;margin-bottom:16px;}
+.modal-actions{display:flex;gap:8px;margin-top:16px;}
+.modal-actions .btn{flex:1;}
+.options-list{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.option-row{display:flex;gap:6px;align-items:center;}
+.option-row input{flex:1;}
+
+/* Schedule table */
+.sched-table{width:100%;border-collapse:collapse;}
+.sched-table th{text-align:left;font-size:11px;font-weight:600;color:var(--text-xs);padding:8px 10px;border-bottom:2px solid var(--border);text-transform:uppercase;letter-spacing:0.3px;}
+.sched-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.sched-table tr:last-child td{border-bottom:none;}
+.sched-table input[type="text"]{padding:6px 10px;font-size:13px;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge-locked{background:var(--blue-light);color:var(--blue);}
+.badge-required{background:var(--yellow-light);color:var(--yellow);}
+
+/* Add question type picker */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.type-option{padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;text-align:center;transition:all 0.15s;}
+.type-option:hover,.type-option.selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
+.type-option .type-icon{font-size:18px;margin-bottom:4px;}
+.type-option .type-name{font-size:12px;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div id="view-login" style="display:none">
+  <div class="login-card">
+    <div style="font-family:'Fraunces',serif;font-size:24px;font-weight:800;color:var(--accent);margin-bottom:4px">SomiSomi</div>
+    <p style="color:var(--text-soft);font-size:13px;margin-bottom:20px">Settings Panel</p>
+    <div class="field"><input type="password" class="pin-input" id="pin-input" placeholder="PIN" maxlength="10"></div>
+    <div class="login-error" id="login-error">Incorrect PIN.</div>
+    <button class="btn btn-primary" style="width:100%;margin-top:12px;padding:10px" onclick="checkPin()">Enter</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="view-settings" style="display:none">
+  <div class="container">
+    <div class="top-bar">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:800;color:var(--accent)">SomiSomi</div>
+        <h1 style="font-size:18px;font-weight:600">Settings</h1>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="https://somisomi-westheimer.github.io/" class="btn btn-secondary" target="_blank">📋 View Form</a>
+        <a href="dashboard.html" class="btn btn-secondary">📊 Dashboard</a>
+        <button class="btn btn-secondary" onclick="logout()">🔒 Log Out</button>
+      </div>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn active" onclick="showSection('appform',this)">📋 Application Form</button>
+      <button class="nav-btn" onclick="showSection('interview',this)">🎯 Interview Form</button>
+      <button class="nav-btn" onclick="showSection('general',this)">⚙️ General</button>
+    </div>
+
+    <!-- APP FORM SECTION -->
+    <div id="section-appform" class="settings-section active">
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <div>
+            <strong style="font-size:15px">Application Form Questions</strong>
+            <p style="font-size:12px;color:var(--text-xs);margin-top:2px">Drag to reorder · Toggle to show/hide · Click ✏️ to edit</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openAddQuestion('app')">+ Add Question</button>
+        </div>
+      </div>
+      <div class="question-list" id="app-question-list"></div>
+      <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="saveAppForm()">💾 Save Application Form</button>
+
+      <div class="card" style="margin-top:16px">
+        <strong style="font-size:15px;display:block;margin-bottom:4px">📅 Shift Times</strong>
+        <p style="font-size:12px;color:var(--text-xs);margin-bottom:14px">Set the available shifts for each day. The Type controls how the day appears on the form.</p>
+        <table class="sched-table" id="sched-table">
+          <thead><tr><th>Day</th><th>Day Shift</th><th>Evening Shift</th><th>"All Day" Label</th><th>"Unavailable" Label</th><th>Type</th></tr></thead>
+          <tbody id="sched-body"></tbody>
+        </table>
+        <button class="btn btn-primary btn-sm" style="margin-top:14px" onclick="saveSchedule()">💾 Save Shift Times</button>
+      </div>
+    </div>
+
+    <!-- INTERVIEW SECTION -->
+    <div id="section-interview" class="settings-section">
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <div>
+            <strong style="font-size:15px">Interview Scenario Questions</strong>
+            <p style="font-size:12px;color:var(--text-xs);margin-top:2px">These appear during the vibe evaluation</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openAddScenario()">+ Add Question</button>
+        </div>
+      </div>
+      <div class="question-list" id="interview-question-list"></div>
+      <div class="card" style="margin-top:12px">
+        <strong style="font-size:14px;display:block;margin-bottom:10px">Overall Grade Categories</strong>
+        <div id="grade-list" style="display:flex;flex-direction:column;gap:6px"></div>
+        <button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="addGradeCategory()">+ Add Category</button>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="saveInterviewForm()">💾 Save Interview Form</button>
+    </div>
+
+
+
+    <!-- GENERAL SECTION -->
+    <div id="section-general" class="settings-section">
+      <div class="card">
+        <strong style="font-size:15px;display:block;margin-bottom:14px">General Settings</strong>
+        <div class="field"><label>Location Name</label><input type="text" id="locationName" placeholder="e.g. Metropark Square"></div>
+        <div class="field"><label>Pay Info</label><textarea id="payInfo" rows="3"></textarea></div>
+        <div class="field"><label>Our Motto</label><input type="text" id="motto"></div>
+        <button class="btn btn-primary btn-sm" onclick="saveGeneral()">💾 Save</button>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <strong style="font-size:15px;display:block;margin-bottom:14px">🔒 Change PIN</strong>
+        <div class="field"><label>Current PIN</label><input type="password" id="currentPin" placeholder="Current PIN"></div>
+        <div class="field"><label>New PIN</label><input type="password" id="newPin" placeholder="Min 4 digits"></div>
+        <div class="field"><label>Confirm New PIN</label><input type="password" id="confirmPin" placeholder="Confirm new PIN"></div>
+        <button class="btn btn-primary btn-sm" onclick="changePin()">🔒 Update PIN</button>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<!-- EDIT QUESTION MODAL -->
+<div id="question-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeQuestionModal()">
+  <div class="modal">
+    <h3 id="modal-title">Edit Question</h3>
+    <div class="field"><label>Question Label</label><input type="text" id="q-label" placeholder="e.g. Do you have reliable transportation?"></div>
+    <div class="field"><label>Field Name (no spaces)</label><input type="text" id="q-key" placeholder="e.g. transport"></div>
+    <div class="field"><label>Type</label>
+      <select id="q-type" onchange="handleTypeChange()">
+        <option value="radio">Radio (pick one)</option>
+        <option value="text">Text input</option>
+        <option value="textarea">Long answer</option>
+        <option value="date">Date</option>
+        <option value="number">Number</option>
+        <option value="select">Dropdown</option>
+      </select>
+    </div>
+    <div id="options-section" class="field">
+      <label>Options</label>
+      <div class="options-list" id="options-list"></div>
+      <button class="btn btn-secondary btn-sm" style="margin-top:6px" onclick="addOption()">+ Add Option</button>
+    </div>
+    <div class="field"><label>Placeholder / Helper Text <span style="font-weight:400;text-transform:none">(optional)</span></label><input type="text" id="q-placeholder" placeholder="e.g. e.g. Target, Cashier"></div>
+    <div class="field" style="display:flex;align-items:center;gap:10px">
+      <label style="margin:0">Required</label>
+      <label class="toggle-switch"><input type="checkbox" id="q-required" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeQuestionModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveQuestion()">Save Question</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT SCENARIO MODAL -->
+<div id="scenario-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeScenarioModal()">
+  <div class="modal">
+    <h3 id="scenario-modal-title">Edit Scenario</h3>
+    <div class="field"><label>Question</label><textarea id="s-question" rows="3" placeholder="e.g. Your car breaks down and your shift starts in an hour — what do you do?"></textarea></div>
+    <div class="field"><label>Good Answer Hint</label><textarea id="s-hint" rows="3" placeholder="✅ Good answer: ..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeScenarioModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveScenario()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCPCaPkMTaig9oNAfIJc1Za9fIWVl-cjcY",
+  authDomain: "somisomi-hiring.firebaseapp.com",
+  projectId: "somisomi-hiring",
+  storageBucket: "somisomi-hiring.firebasestorage.app",
+  messagingSenderId: "6359504148",
+  appId: "1:6359504148:web:5ae570e52298062dd65e01"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let settings = {};
+let appQuestions = [];
+let interviewScenarios = [];
+let gradeCategories = [];
+let editingQuestionIndex = -1;
+let editingScenarioIndex = -1;
+let editingContext = 'app';
+let dragSrcIndex = -1;
+
+const DEFAULT_APP_QUESTIONS = [
+  { key:'student', label:'Are you currently a student?', type:'radio', options:['No','Yes - High School','Yes - College'], required:true, enabled:true },
+  { key:'gradYear', label:'Expected Graduation Year', type:'select', options:['2025','2026','2027','2028','2029','2030'], required:false, enabled:true, conditional:'student:Yes - High School|Yes - College' },
+  { key:'otherJob', label:'Any other jobs or commitments?', type:'radio', options:['No','Yes'], required:true, enabled:true },
+  { key:'otherJobDesc', label:'Describe your other job & schedule', type:'text', placeholder:'e.g. Retail, Tues-Thurs 9am-3pm', required:false, enabled:true, conditional:'otherJob:Yes' },
+  { key:'jobType', label:'Are you looking for a seasonal or long-term position?', type:'radio', options:['Long Term','Seasonal'], required:true, enabled:true },
+  { key:'lastDay', label:'Expected last day', type:'date', required:false, enabled:true, conditional:'jobType:Seasonal' },
+  { key:'machineCleaning', label:'Machine cleaning availability (once/week, 6PM–Midnight)', type:'radio', options:['Open to Both','Thursday Night','Sunday Night','Neither'], required:true, enabled:true },
+  { key:'schedNotes', label:'Scheduling Notes', type:'textarea', placeholder:"Any upcoming vacations or specific dates/times that won't work? If none, write 'None'.", required:true, enabled:true },
+  { key:'hoursPreferred', label:'Preferred hours/week', type:'number', placeholder:'e.g. 20', required:true, enabled:true },
+  { key:'hoursMinimum', label:'Minimum hours/week', type:'number', placeholder:'e.g. 10', required:true, enabled:true },
+  { key:'transport', label:'Do you have reliable transportation?', type:'radio', options:['Yes - own car','Yes - shared car','Yes - rideshare/bus','No'], required:true, enabled:true },
+  { key:'bank', label:'Bank account for direct deposit?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'startNow', label:'Can you start immediately?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'startDate', label:'When can you start?', type:'date', required:false, enabled:true, conditional:'startNow:No' },
+  { key:'currentlyEmployed', label:"What's your work experience?", type:'radio', options:['Currently employed','Previously employed','First job'], required:true, enabled:true },
+  { key:'currentCompany', label:'Current Company', type:'text', placeholder:'e.g. Target', required:false, enabled:true, conditional:'currentlyEmployed:Currently employed' },
+  { key:'currentTitle', label:'Current Job Title', type:'text', placeholder:'e.g. Cashier', required:false, enabled:true, conditional:'currentlyEmployed:Currently employed' },
+  { key:'currentLength', label:'How long have you been there?', type:'text', placeholder:'e.g. 6 months', required:false, enabled:true, conditional:'currentlyEmployed:Currently employed' },
+  { key:'currentReason', label:'Reason for leaving?', type:'text', placeholder:'e.g. Looking for new opportunities', required:false, enabled:true, conditional:'currentlyEmployed:Currently employed' },
+  { key:'recentCompany', label:'Most Recent Company', type:'text', placeholder:'e.g. Target', required:false, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'recentTitle', label:'Most Recent Job Title', type:'text', placeholder:'e.g. Cashier', required:false, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'recentWhen', label:'How long ago?', type:'text', placeholder:'e.g. 3 months ago', required:false, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'recentLength', label:'How long were you there?', type:'text', placeholder:'e.g. 1 year', required:false, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'recentReason', label:'Reason for leaving?', type:'text', placeholder:'e.g. Moved', required:false, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'foodExp', label:'Any food industry experience?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'comfortPhysical', label:'Comfortable standing for long periods, doing food prep, and cleaning?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'comfortRush', label:'Comfortable handling busy rushes and difficult customers?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'notes', label:"Tell us about yourself and why you're interested in this job", type:'textarea', placeholder:"e.g. I'm a fast learner, love customer service...", required:true, enabled:true },
+];
+
+const DEFAULT_SCENARIOS = [
+  { q:"Your car breaks down and your shift starts in an hour — what do you do?", hint:"✅ Good answer: Calls/texts the store right away, finds a ride (Uber, friend, family), doesn't just no-show", enabled:true },
+  { q:"A customer is upset and yelling about their order being wrong — how do you handle it?", hint:"✅ Good answer: Stays calm, apologizes, remakes the order or gets a manager, doesn't argue back", enabled:true },
+  { q:"Being on time is one of our core values. You're always punctual, but this one time you're running 5 minutes late — what do you do?", hint:"✅ Good answer: Contacts the store immediately, gives a heads up and ETA, takes responsibility instead of making excuses", enabled:true },
+  { q:"This team runs on equal contribution. You'll get honest feedback often — how do you handle it? Say the manager tells you to work on speed.", hint:"✅ Good answer: Takes it positively, acknowledges feedback, has a plan to improve, doesn't make excuses", enabled:true },
+  { q:"You notice your coworker is slacking off and not doing their fair share — what do you do?", hint:"✅ Good answer: Picks up slack without drama, talks to them if needed, lets a manager know if it keeps happening", enabled:true },
+  { q:"It's 2 minutes to closing and a big family walks in — how do you greet them?", hint:"✅ Good answer: Welcomes them warmly, serves with a good attitude, doesn't make them feel like a burden", enabled:true },
+  { q:"You notice a coworker isn't wearing gloves while handling food — what do you do?", hint:"✅ Good answer: Politely reminds them, doesn't ignore it, food safety comes first", enabled:true },
+  { q:"A customer asks for something that's not on the menu — what do you do?", hint:"✅ Good answer: Is polite, checks with a manager if unsure, suggests similar items we do have", enabled:true },
+];
+
+const DEFAULT_GRADES = ['Attitude','Communication','Reliability','Customer Service','Energy & Enthusiasm','Problem Solving'];
+
+const DEFAULT_SETTINGS = {
+  payInfo: "$7.25/hour for your first 35 training hours. After training you will receive tips which put you anywhere between $11–$14/hr.",
+  motto: "Be on time, ready to learn, and work with a positive attitude.",
+  locationName: "Westheimer",
+  pin: "1234",
+  schedule: {
+    Monday:    { day:"12pm–6pm", eve:"6pm–10:30pm", locked:false },
+    Tuesday:   { day:"12pm–6pm", eve:"6pm–10:30pm", locked:false },
+    Wednesday: { day:"12pm–6pm", eve:"6pm–10:30pm", locked:false },
+    Thursday:  { day:"12pm–6pm", eve:"6pm–11:45pm", locked:false },
+    Friday:    { day:null, eve:"6pm–10:30pm", locked:false, required:true, requiredShift:"evening" },
+    Saturday:  { day:"11:30am–6pm", eve:"6pm–11:30pm", locked:true },
+    Sunday:    { day:"11:30am–6pm", eve:"6pm–11:45pm", locked:true }
+  }
+};
+
+function showToast(msg, ok=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = ok ? '#059669' : '#111827';
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+window.showSection = (name, btn) => {
+  document.querySelectorAll('.settings-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('section-'+name).classList.add('active');
+  btn.classList.add('active');
+};
+
+window.checkPin = async () => {
+  const pin = document.getElementById('pin-input').value;
+  try {
+    const snap = await getDoc(doc(db,'config-westheimer','settings'));
+    const stored = snap.exists() ? (snap.data().pin||'1234') : '1234';
+    if (pin === stored) { auth(); }
+    else { document.getElementById('login-error').style.display='block'; document.getElementById('pin-input').value=''; }
+  } catch(e) { if (pin==='1234') auth(); else document.getElementById('login-error').style.display='block'; }
+};
+
+function auth() {
+  sessionStorage.setItem('settingsAuth','true');
+  document.getElementById('view-login').style.display='none';
+  document.getElementById('view-settings').style.display='block';
+  loadAll();
+}
+
+document.getElementById('pin-input').addEventListener('keydown', e => { if(e.key==='Enter') window.checkPin(); });
+window.logout = () => { sessionStorage.removeItem('settingsAuth'); location.reload(); };
+
+async function loadAll() {
+  try {
+    const [settingsSnap, appSnap, interviewSnap] = await Promise.all([
+      getDoc(doc(db,'config-westheimer','settings')),
+      getDoc(doc(db,'config-westheimer','appForm')),
+      getDoc(doc(db,'config-westheimer','interviewForm')),
+    ]);
+    settings = settingsSnap.exists() ? {...DEFAULT_SETTINGS, ...settingsSnap.data()} : {...DEFAULT_SETTINGS};
+    appQuestions = appSnap.exists() ? appSnap.data().questions : DEFAULT_APP_QUESTIONS;
+    const iv = interviewSnap.exists() ? interviewSnap.data() : {};
+    interviewScenarios = iv.scenarios || DEFAULT_SCENARIOS;
+    gradeCategories = iv.grades || DEFAULT_GRADES;
+  } catch(e) {
+    settings = {...DEFAULT_SETTINGS};
+    appQuestions = DEFAULT_APP_QUESTIONS;
+    interviewScenarios = DEFAULT_SCENARIOS;
+    gradeCategories = DEFAULT_GRADES;
+  }
+  document.getElementById('payInfo').value = settings.payInfo||'';
+  document.getElementById('motto').value = settings.motto||'';
+  document.getElementById('locationName').value = settings.locationName||'';
+  renderAppQuestions();
+  renderInterviewQuestions();
+  renderGradeCategories();
+  buildSchedTable();
+}
+
+// ── APP FORM ──
+function renderAppQuestions() {
+  const list = document.getElementById('app-question-list');
+  list.innerHTML = appQuestions.map((q,i) => `
+    <div class="question-item ${q.enabled===false?'disabled':''}" draggable="true" data-index="${i}"
+      ondragstart="dragStart(event,${i})" ondragover="dragOver(event,${i})" ondrop="dropQ(event,${i},'app')" ondragleave="dragLeave(event)">
+      <span class="drag-handle">⠿</span>
+      <div class="q-body">
+        <div class="q-label">${q.label}</div>
+        <div class="q-meta">${q.type}${q.conditional?' · conditional':''}${q.options?' · '+q.options.slice(0,3).join(', ')+(q.options.length>3?'…':''):''}</div>
+      </div>
+      <div class="q-actions">
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="editQuestion(${i},'app')" title="Edit">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteQuestion(${i},'app')" title="Delete">🗑️</button>
+        <label class="toggle-switch" title="toggle">
+          <input type="checkbox" ${q.enabled!==false?'checked':''} onchange="toggleQuestion(${i},'app',this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>`).join('');
+}
+
+window.toggleQuestion = (i, ctx, val) => {
+  if (ctx==='app') { appQuestions[i].enabled = val; renderAppQuestions(); }
+};
+
+window.deleteQuestion = (i, ctx) => {
+  if (!confirm('Delete this question?')) return;
+  if (ctx==='app') { appQuestions.splice(i,1); renderAppQuestions(); }
+};
+
+window.editQuestion = (i, ctx) => {
+  editingQuestionIndex = i; editingContext = ctx;
+  const q = appQuestions[i];
+  document.getElementById('modal-title').textContent = 'Edit Question';
+  document.getElementById('q-label').value = q.label||'';
+  document.getElementById('q-key').value = q.key||'';
+  document.getElementById('q-type').value = q.type||'radio';
+  document.getElementById('q-placeholder').value = q.placeholder||'';
+  document.getElementById('q-required').checked = q.required!==false;
+  renderOptions(q.options||[]);
+  handleTypeChange();
+  document.getElementById('question-modal').style.display='flex';
+};
+
+window.openAddQuestion = (ctx) => {
+  editingQuestionIndex = -1; editingContext = ctx;
+  document.getElementById('modal-title').textContent = 'Add Question';
+  document.getElementById('q-label').value = '';
+  document.getElementById('q-key').value = '';
+  document.getElementById('q-type').value = 'radio';
+  document.getElementById('q-placeholder').value = '';
+  document.getElementById('q-required').checked = true;
+  renderOptions(['Yes','No']);
+  handleTypeChange();
+  document.getElementById('question-modal').style.display='flex';
+};
+
+function renderOptions(opts) {
+  document.getElementById('options-list').innerHTML = opts.map((o,i)=>`
+    <div class="option-row">
+      <input type="text" value="${o}" placeholder="Option ${i+1}" oninput="updateOption(${i},this.value)">
+      <button class="btn btn-danger btn-sm btn-icon" onclick="removeOption(${i})">✕</button>
+    </div>`).join('');
+}
+
+window.handleTypeChange = () => {
+  const type = document.getElementById('q-type').value;
+  document.getElementById('options-section').style.display = (type==='radio'||type==='select') ? 'block' : 'none';
+};
+
+let currentOptions = [];
+window.addOption = () => {
+  const items = document.querySelectorAll('#options-list .option-row input');
+  currentOptions = Array.from(items).map(i=>i.value);
+  currentOptions.push('');
+  renderOptions(currentOptions);
+};
+window.removeOption = (i) => {
+  const items = document.querySelectorAll('#options-list .option-row input');
+  currentOptions = Array.from(items).map(el=>el.value);
+  currentOptions.splice(i,1);
+  renderOptions(currentOptions);
+};
+window.updateOption = (i,val) => { /* live update handled on save */ };
+
+window.saveQuestion = () => {
+  const label = document.getElementById('q-label').value.trim();
+  const key = document.getElementById('q-key').value.trim().replace(/\s+/g,'');
+  const type = document.getElementById('q-type').value;
+  const placeholder = document.getElementById('q-placeholder').value.trim();
+  const required = document.getElementById('q-required').checked;
+  if (!label||!key) { showToast('Label and field name are required'); return; }
+  const options = type==='radio'||type==='select'
+    ? Array.from(document.querySelectorAll('#options-list .option-row input')).map(i=>i.value.trim()).filter(Boolean)
+    : undefined;
+  const q = { key, label, type, required, enabled:true, ...(placeholder&&{placeholder}), ...(options&&{options}) };
+  if (editingQuestionIndex>=0) appQuestions[editingQuestionIndex] = q;
+  else appQuestions.push(q);
+  renderAppQuestions();
+  closeQuestionModal();
+};
+
+window.closeQuestionModal = () => { document.getElementById('question-modal').style.display='none'; };
+
+window.saveAppForm = async () => {
+  const defaultMap = {};
+  DEFAULT_APP_QUESTIONS.forEach(q => defaultMap[q.key] = q);
+  const toSave = appQuestions.map(q => {
+    const def = defaultMap[q.key];
+    const out = { ...q };
+    // Preserve conditional from defaults
+    if (def?.conditional) out.conditional = def.conditional;
+    else delete out.conditional;
+    // Remove any undefined values (Firebase rejects them)
+    Object.keys(out).forEach(k => { if (out[k] === undefined) delete out[k]; });
+    return out;
+  });
+  await setDoc(doc(db,'config-westheimer','appForm'), { questions: toSave });
+  showToast('✅ Application form saved!', true);
+};
+
+// ── INTERVIEW FORM ──
+function renderInterviewQuestions() {
+  const list = document.getElementById('interview-question-list');
+  list.innerHTML = interviewScenarios.map((s,i) => `
+    <div class="question-item ${s.enabled===false?'disabled':''}" draggable="true" data-index="${i}"
+      ondragstart="dragStart(event,${i})" ondragover="dragOver(event,${i})" ondrop="dropQ(event,${i},'interview')" ondragleave="dragLeave(event)">
+      <span class="drag-handle">⠿</span>
+      <div class="q-body">
+        <div class="q-label">${i+1}. ${s.q}</div>
+        <div class="q-meta" style="color:var(--green);margin-top:2px">${s.hint}</div>
+      </div>
+      <div class="q-actions">
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="editScenario(${i})" title="Edit">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteScenario(${i})" title="Delete">🗑️</button>
+        <label class="toggle-switch">
+          <input type="checkbox" ${s.enabled!==false?'checked':''} onchange="toggleScenario(${i},this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>`).join('');
+}
+
+window.toggleScenario = (i,val) => { interviewScenarios[i].enabled=val; renderInterviewQuestions(); };
+window.deleteScenario = (i) => {
+  if (!confirm('Delete this question?')) return;
+  interviewScenarios.splice(i,1); renderInterviewQuestions();
+};
+window.editScenario = (i) => {
+  editingScenarioIndex = i;
+  document.getElementById('scenario-modal-title').textContent = 'Edit Scenario';
+  document.getElementById('s-question').value = interviewScenarios[i].q||'';
+  document.getElementById('s-hint').value = interviewScenarios[i].hint||'';
+  document.getElementById('scenario-modal').style.display='flex';
+};
+window.openAddScenario = () => {
+  editingScenarioIndex = -1;
+  document.getElementById('scenario-modal-title').textContent = 'Add Scenario';
+  document.getElementById('s-question').value = '';
+  document.getElementById('s-hint').value = '';
+  document.getElementById('scenario-modal').style.display='flex';
+};
+window.saveScenario = () => {
+  const q = document.getElementById('s-question').value.trim();
+  const hint = document.getElementById('s-hint').value.trim();
+  if (!q) { showToast('Question is required'); return; }
+  const s = { q, hint, enabled:true };
+  if (editingScenarioIndex>=0) interviewScenarios[editingScenarioIndex]=s;
+  else interviewScenarios.push(s);
+  renderInterviewQuestions();
+  closeScenarioModal();
+};
+window.closeScenarioModal = () => { document.getElementById('scenario-modal').style.display='none'; };
+
+function renderGradeCategories() {
+  document.getElementById('grade-list').innerHTML = gradeCategories.map((g,i)=>`
+    <div class="option-row">
+      <input type="text" value="${g}" oninput="gradeCategories[${i}]=this.value" placeholder="e.g. Attitude">
+      <button class="btn btn-danger btn-sm btn-icon" onclick="removeGrade(${i})">✕</button>
+    </div>`).join('');
+}
+window.addGradeCategory = () => { gradeCategories.push(''); renderGradeCategories(); };
+window.removeGrade = (i) => { gradeCategories.splice(i,1); renderGradeCategories(); };
+
+window.saveInterviewForm = async () => {
+  // Capture any live-edited grade values
+  document.querySelectorAll('#grade-list input').forEach((inp,i) => { gradeCategories[i] = inp.value; });
+  await setDoc(doc(db,'config-westheimer','interviewForm'), { scenarios:interviewScenarios, grades:gradeCategories });
+  showToast('✅ Interview form saved!', true);
+};
+
+// ── SCHEDULE ──
+function buildSchedTable() {
+  const tbody = document.getElementById('sched-body');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  dayOrder.forEach(day => {
+    const cfg = (settings.schedule||{})[day];
+    if (!cfg) return;
+    const typeVal = cfg.locked ? 'locked' : cfg.required ? 'required' : 'normal';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><strong>${day}</strong></td>
+      <td><input type="text" value="${cfg.day||''}" data-day="${day}" data-field="day" placeholder="e.g. 12pm–6pm"></td>
+      <td><input type="text" value="${cfg.eve||''}" data-day="${day}" data-field="eve" placeholder="e.g. 6pm–10:30pm"></td>
+      <td><input type="text" value="${cfg.allDayLabel||'Available All Day'}" data-day="${day}" data-field="allDayLabel" placeholder="Available All Day"></td>
+      <td><input type="text" value="${cfg.unavailLabel||'Unavailable'}" data-day="${day}" data-field="unavailLabel" placeholder="Unavailable"></td>
+      <td>
+        <select data-day="${day}" data-field="type" style="padding:5px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px;background:var(--surface)">
+          <option value="normal" ${typeVal==='normal'?'selected':''}>Normal</option>
+          <option value="locked" ${typeVal==='locked'?'selected':''}>🔒 Locked (required all day)</option>
+          <option value="required" ${typeVal==='required'?'selected':''}>⚠️ Evening required</option>
+        </select>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+window.saveSchedule = async () => {
+  document.querySelectorAll('#sched-body input[type="text"]').forEach(inp => {
+    const day=inp.dataset.day, field=inp.dataset.field;
+    if (!settings.schedule[day]) settings.schedule[day]={};
+    if (field === 'allDayLabel' || field === 'unavailLabel') {
+      settings.schedule[day][field] = inp.value.trim() || (field === 'allDayLabel' ? 'Available All Day' : 'Unavailable');
+    } else {
+      settings.schedule[day][field] = inp.value.trim()||null;
+    }
+  });
+  document.querySelectorAll('#sched-body select[data-field="type"]').forEach(sel => {
+    const day = sel.dataset.day;
+    if (!settings.schedule[day]) settings.schedule[day]={};
+    const t = sel.value;
+    settings.schedule[day].locked = t === 'locked';
+    settings.schedule[day].required = t === 'required';
+    if (t === 'required') settings.schedule[day].requiredShift = 'evening';
+    else delete settings.schedule[day].requiredShift;
+  });
+  await setDoc(doc(db,'config-westheimer','settings'), settings);
+  showToast('✅ Shift times saved!', true);
+};
+
+// ── GENERAL ──
+window.saveGeneral = async () => {
+  settings.locationName = document.getElementById('locationName').value.trim();
+  settings.payInfo = document.getElementById('payInfo').value.trim();
+  settings.motto = document.getElementById('motto').value.trim();
+  await setDoc(doc(db,'config-westheimer','settings'), settings);
+  showToast('✅ Settings saved!', true);
+};
+
+// ── PIN ──
+window.changePin = async () => {
+  const cur=document.getElementById('currentPin').value;
+  const np=document.getElementById('newPin').value;
+  const cp=document.getElementById('confirmPin').value;
+  if (cur!==settings.pin) { showToast('Current PIN is incorrect'); return; }
+  if (np.length<4) { showToast('New PIN must be at least 4 digits'); return; }
+  if (np!==cp) { showToast('PINs do not match'); return; }
+  settings.pin=np;
+  await setDoc(doc(db,'config-westheimer','settings'), settings);
+  showToast('✅ PIN updated!', true);
+  ['currentPin','newPin','confirmPin'].forEach(id=>document.getElementById(id).value='');
+};
+
+// ── DRAG & DROP ──
+window.dragStart = (e,i) => { dragSrcIndex=i; e.currentTarget.classList.add('dragging'); };
+window.dragOver = (e,i) => { e.preventDefault(); e.currentTarget.classList.add('drag-over'); };
+window.dragLeave = (e) => { e.currentTarget.classList.remove('drag-over'); };
+window.dropQ = (e,i,ctx) => {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragSrcIndex===i) return;
+  if (ctx==='app') {
+    const moved = appQuestions.splice(dragSrcIndex,1)[0];
+    appQuestions.splice(i,0,moved);
+    renderAppQuestions();
+  } else {
+    const moved = interviewScenarios.splice(dragSrcIndex,1)[0];
+    interviewScenarios.splice(i,0,moved);
+    renderInterviewQuestions();
+  }
+};
+
+// ── INIT ──
+if (sessionStorage.getItem('settingsAuth')) {
+  document.getElementById('view-settings').style.display='block';
+  loadAll();
+} else {
+  document.getElementById('view-login').style.display='flex';
+}
+</script>
+</body>
+</html>
