@@ -178,8 +178,9 @@ textarea{resize:vertical;min-height:70px;}
 <!-- LOGIN -->
 <div id="view-login" class="view active" style="min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;background:var(--bg);">
   <div class="login-box">
-    <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:800;color:var(--accent);margin-bottom:4px">SomiSomi</div>
-    <p style="color:var(--text-soft);font-size:13px;margin-bottom:20px">Westheimer Hiring Dashboard</p>
+    <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:800;color:var(--accent);margin-bottom:2px">SomiSomi</div>
+    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">Westheimer</div>
+    <p style="color:var(--text-soft);font-size:13px;margin-bottom:20px">Hiring Dashboard</p>
     <div class="field"><input type="password" class="pin-input" id="pin-input" placeholder="PIN" maxlength="10"></div>
     <div class="login-error" id="login-error">Incorrect PIN. Try again.</div>
     <button class="btn btn-primary" style="width:100%;margin-top:12px;padding:10px 14px;font-size:14px" onclick="checkPin()">Enter</button>
@@ -189,7 +190,7 @@ textarea{resize:vertical;min-height:70px;}
 <!-- DASHBOARD -->
 <div id="view-dashboard" class="view" style="display:none">
   <div class="topbar">
-    <div class="logo">SomiSomi</div>
+    <div><div class="logo">SomiSomi</div><div style="font-size:11px;font-weight:600;color:var(--text-soft);letter-spacing:0.5px;text-transform:uppercase;margin-top:-2px">Westheimer</div></div>
     <div class="topbar-actions">
       <a href="settings.html" class="btn btn-sm">⚙️ Settings</a>
       <button class="btn btn-sm" onclick="refreshDash()">↻ Refresh</button>
@@ -218,7 +219,7 @@ textarea{resize:vertical;min-height:70px;}
 <!-- PROFILE -->
 <div id="view-profile" class="view" style="display:none">
   <div class="topbar">
-    <div class="logo">SomiSomi</div>
+    <div><div class="logo">SomiSomi</div><div style="font-size:11px;font-weight:600;color:var(--text-soft);letter-spacing:0.5px;text-transform:uppercase;margin-top:-2px">Westheimer</div></div>
     <div class="topbar-actions">
       <a href="settings.html" class="btn btn-sm">⚙️ Settings</a>
       <button class="btn btn-sm" onclick="logoutDash()">🔒 Log Out</button>
@@ -238,7 +239,7 @@ textarea{resize:vertical;min-height:70px;}
 <!-- VIBE EVAL -->
 <div id="view-vibe" class="view" style="display:none">
   <div class="topbar">
-    <div class="logo">SomiSomi</div>
+    <div><div class="logo">SomiSomi</div><div style="font-size:11px;font-weight:600;color:var(--text-soft);letter-spacing:0.5px;text-transform:uppercase;margin-top:-2px">Westheimer</div></div>
   </div>
   <div class="container" style="padding-top:20px">
     <button class="back-btn" id="vibe-back-btn">← Back to Profile</button>
