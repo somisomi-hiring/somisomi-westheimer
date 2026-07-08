@@ -159,10 +159,9 @@ textarea { resize:vertical; min-height:72px; }
 
       <div class="card" id="pay-card">
         <div class="info-box">
-          <strong>💵 Pay Info</strong><br><br>
-          <span id="pay-info-text">Loading pay info...</span><br><br>
           <strong>Our Motto:</strong> <span id="motto-text">Be on time, ready to learn, and work with a positive attitude.</span>
         </div>
+        <span id="pay-info-text" style="display:none"></span>
       </div>
 
       <button type="submit" class="btn-primary" id="apply-btn">Submit Application</button>
@@ -198,7 +197,7 @@ const db = getFirestore(app);
 
 // Default settings fallback
 const DEFAULT_SETTINGS = {
-  payInfo: "$9/hour for your first 35 training hours. After training you will receive tips which put you anywhere between $12–$13/hr.",
+  payInfo: "$9/hour for your first 25-30 hours of training (depending on how fast you pick things up). After training you will receive tips which put you anywhere between $12–$13/hr.",
   motto: "Be on time, ready to learn, and work with a positive attitude.",
   locationName: "Westheimer",
   schedule: {
@@ -226,6 +225,7 @@ const DEFAULT_APP_QUESTIONS = [
   { key:'transport', label:'Do you have reliable transportation?', type:'radio', options:['Yes - own car','Yes - shared car','Yes - rideshare/bus','No'], required:true, enabled:true },
   { key:'bank', label:'Bank account for direct deposit?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'hoursOkay', label:'Are you okay with 15–20 hours per week?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'payOkay', label:'PAY_INFO_PLACEHOLDER', type:'radio', options:['✅ Yes, I\'m still interested','❌ No, this doesn\'t work for me'], required:true, enabled:true },
   { key:'startNow', label:'Can you start immediately?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'startDate', label:'When can you start?', type:'date', required:false, enabled:true, conditional:'startNow:No' },
   { key:'currentlyEmployed', label:"What's your work experience?", type:'radio', options:['Currently employed','Previously employed','First job'], required:true, enabled:true },
@@ -340,7 +340,11 @@ function buildField(q) {
   }
 
   const label = document.createElement('label');
-  label.textContent = q.label + (q.required ? ' *' : '');
+  if (q.key === 'payOkay') {
+    label.innerHTML = q.label + (q.required ? ' <span style="color:var(--accent)">*</span>' : '');
+  } else {
+    label.textContent = q.label + (q.required ? ' *' : '');
+  }
   div.appendChild(label);
 
   if (q.type === 'radio') {
@@ -444,11 +448,15 @@ async function loadSettings() {
       appQuestions = saved.map(q => {
         const def = defaultMap[q.key] || {};
         const merged = { ...def, ...q };
-        // Always preserve conditional and required from default
         if (def.conditional) merged.conditional = def.conditional;
         else delete merged.conditional;
         if (def.conditional && def.required) merged.required = true;
         return merged;
+      });
+      // Add any DEFAULT questions not yet in Firebase
+      const savedKeys = new Set(saved.map(q => q.key));
+      DEFAULT_APP_QUESTIONS.forEach(q => {
+        if (!savedKeys.has(q.key)) appQuestions.push(q);
       });
     }
   } catch(e) { console.warn('Using default settings', e); }
@@ -458,6 +466,9 @@ async function loadSettings() {
   document.getElementById('motto-text').textContent = settings.motto;
   document.getElementById('location-text').textContent = `${settings.locationName} Location — Please fill out the form below!`;
   buildScheduleGrid();
+  // Update pay okay question label with actual pay info
+  const payOkayQ = appQuestions.find(q => q.key === 'payOkay');
+  if (payOkayQ) payOkayQ.label = `Please review our pay before submitting:<br><br>• Paid training: $9 (your first 25–30 hours)<br>&nbsp;&nbsp;&nbsp;↳ Depends on how fast you pick things up<br>• After training: tips bring you to $12–$13/hr<br><br>Are you still interested?`;
   buildDynamicForm();
 
   document.getElementById('loading').style.display = 'none';
@@ -571,7 +582,7 @@ document.getElementById('apply-form').addEventListener('submit', async (e) => {
   }
 
   // Manual check for all radio groups
-  const radioNames = ['student','otherJob','jobType','machineCleaning','transport','bank','startNow','hoursOkay','currentlyEmployed','goodStanding','foodExp','comfortPhysical','comfortRush'];
+  const radioNames = ['student','otherJob','jobType','machineCleaning','transport','bank','startNow','payOkay','hoursOkay','currentlyEmployed','goodStanding','foodExp','comfortPhysical','comfortRush'];
   for (const name of radioNames) {
     const el = e.target.querySelector(`input[name="${name}"]`);
     if (!el) continue;
