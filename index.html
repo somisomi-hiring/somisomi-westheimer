@@ -264,7 +264,7 @@ function buildDynamicForm() {
     'machineCleaning','schedNotes','hoursPreferred','hoursMinimum',
     'currentlyEmployed','currentCompany','currentTitle','currentLength','currentReason',
     'recentCompany','recentTitle','recentWhen','recentLength','recentReason','foodExp',
-    'comfortPhysical','comfortRush','notes','goodStanding'];
+    'comfortPhysical','comfortRush','notes','goodStanding','payInfo'];
   const customKeys = enabledQuestions.filter(q => !knownKeys.includes(q.key)).map(q => q.key);
 
   // Availability questions ABOVE the schedule grid
@@ -346,6 +346,21 @@ function buildField(q) {
     label.textContent = q.label + (q.required ? ' *' : '');
   }
   div.appendChild(label);
+
+  if (q.type === 'info') {
+    const box = document.createElement('div');
+    box.className = 'info-box';
+    box.style.cssText = 'white-space:pre-line;line-height:1.7;font-size:13px;';
+    const title = document.createElement('strong');
+    title.textContent = q.label;
+    title.style.cssText = 'display:block;margin-bottom:6px;font-size:13px;';
+    box.appendChild(title);
+    const text = document.createTextNode(q.placeholder || '');
+    box.appendChild(text);
+    div.removeChild(label);
+    div.appendChild(box);
+    return div;
+  }
 
   if (q.type === 'radio') {
     const group = document.createElement('div');
@@ -466,9 +481,6 @@ async function loadSettings() {
   document.getElementById('motto-text').textContent = settings.motto;
   document.getElementById('location-text').textContent = `${settings.locationName} Location — Please fill out the form below!`;
   buildScheduleGrid();
-  // Update pay okay question label with actual pay info
-  const payOkayQ = appQuestions.find(q => q.key === 'payOkay');
-  if (payOkayQ) payOkayQ.label = `Please review our pay before submitting:<br><br>• Paid training: $9/hour (your first 25–30 hours)<br>&nbsp;&nbsp;&nbsp;↳ Depends on how fast you pick things up<br>• After training: tips bring you to $12–$13/hr<br><br>Are you still interested?`;
   buildDynamicForm();
 
   document.getElementById('loading').style.display = 'none';
