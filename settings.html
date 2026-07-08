@@ -192,7 +192,6 @@ textarea{resize:vertical;min-height:60px;}
       <div class="card">
         <strong style="font-size:15px;display:block;margin-bottom:14px">General Settings</strong>
         <div class="field"><label>Location Name</label><input type="text" id="locationName" placeholder="e.g. Metropark Square"></div>
-        <div class="field"><label>Pay Info</label><textarea id="payInfo" rows="3"></textarea></div>
         <div class="field"><label>Our Motto</label><input type="text" id="motto"></div>
         <button class="btn btn-primary btn-sm" onclick="saveGeneral()">💾 Save</button>
       </div>
@@ -220,6 +219,7 @@ textarea{resize:vertical;min-height:60px;}
         <option value="radio">Radio (pick one)</option>
         <option value="text">Text input</option>
         <option value="textarea">Long answer</option>
+        <option value="info">Info / Description box</option>
         <option value="date">Date</option>
         <option value="number">Number</option>
         <option value="select">Dropdown</option>
@@ -287,13 +287,15 @@ const DEFAULT_APP_QUESTIONS = [
   { key:'otherJobDesc', label:'Describe your other job & schedule', type:'text', placeholder:'e.g. Retail, Tues-Thurs 9am-3pm', required:false, enabled:true, conditional:'otherJob:Yes' },
   { key:'jobType', label:'Are you looking for a seasonal or long-term position?', type:'radio', options:['Long Term','Seasonal'], required:true, enabled:true },
   { key:'lastDay', label:'Expected last day', type:'date', required:false, enabled:true, conditional:'jobType:Seasonal' },
-  { key:'machineCleaning', label:'Machine cleaning availability (once/week, 6PM–Midnight)', type:'radio', options:['Open to Both','Thursday Night','Sunday Night','Neither'], required:true, enabled:true },
+  { key:'machineCleaning', label:'Machine cleaning is required once per week. Please select which night you are available for.', type:'radio', options:['Open to Both','Thursday Night','Sunday Night','Neither'], required:true, enabled:true },
   { key:'schedNotes', label:'Scheduling Notes', type:'textarea', placeholder:"Any upcoming vacations or specific dates/times that won't work? If none, write 'None'.", required:true, enabled:true },
   { key:'hoursPreferred', label:'Preferred hours/week', type:'number', placeholder:'e.g. 20', required:true, enabled:true },
   { key:'hoursMinimum', label:'Minimum hours/week', type:'number', placeholder:'e.g. 10', required:true, enabled:true },
   { key:'transport', label:'Do you have reliable transportation?', type:'radio', options:['Yes - own car','Yes - shared car','Yes - rideshare/bus','No'], required:true, enabled:true },
   { key:'bank', label:'Bank account for direct deposit?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'startNow', label:'Can you start immediately?', type:'radio', options:['Yes','No'], required:true, enabled:true },
+  { key:'payOkay', label:'Please review our pay before submitting:', type:'radio', options:["✅ Yes, I'm still interested","❌ No, this doesn't work for me"], required:true, enabled:true },
+  { key:'hoursOkay', label:'Are you okay with 15–20 hours per week?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'startDate', label:'When can you start?', type:'date', required:false, enabled:true, conditional:'startNow:No' },
   { key:'currentlyEmployed', label:"What's your work experience?", type:'radio', options:['Currently employed','Previously employed','First job'], required:true, enabled:true },
   { key:'currentCompany', label:'Current Company', type:'text', placeholder:'e.g. Target', required:false, enabled:true, conditional:'currentlyEmployed:Currently employed' },
@@ -305,6 +307,7 @@ const DEFAULT_APP_QUESTIONS = [
   { key:'recentWhen', label:'How long ago?', type:'text', placeholder:'e.g. 3 months ago', required:false, enabled:true, conditional:'currentlyEmployed:Previously employed' },
   { key:'recentLength', label:'How long were you there?', type:'text', placeholder:'e.g. 1 year', required:false, enabled:true, conditional:'currentlyEmployed:Previously employed' },
   { key:'recentReason', label:'Reason for leaving?', type:'text', placeholder:'e.g. Moved', required:false, enabled:true, conditional:'currentlyEmployed:Previously employed' },
+  { key:'goodStanding', label:'If you have left a previous job, did you give proper notice and leave in good standing?', type:'radio', options:['Yes','No','Not Applicable'], required:true, enabled:true },
   { key:'foodExp', label:'Any food industry experience?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'comfortPhysical', label:'Comfortable standing for long periods, doing food prep, and cleaning?', type:'radio', options:['Yes','No'], required:true, enabled:true },
   { key:'comfortRush', label:'Comfortable handling busy rushes and difficult customers?', type:'radio', options:['Yes','No'], required:true, enabled:true },
@@ -391,7 +394,6 @@ async function loadAll() {
     interviewScenarios = DEFAULT_SCENARIOS;
     gradeCategories = DEFAULT_GRADES;
   }
-  document.getElementById('payInfo').value = settings.payInfo||'';
   document.getElementById('motto').value = settings.motto||'';
   document.getElementById('locationName').value = settings.locationName||'';
   renderAppQuestions();
@@ -469,6 +471,8 @@ function renderOptions(opts) {
 window.handleTypeChange = () => {
   const type = document.getElementById('q-type').value;
   document.getElementById('options-section').style.display = (type==='radio'||type==='select') ? 'block' : 'none';
+  // For info type, use placeholder as the text content
+  document.querySelector('label[for="q-placeholder"]') && (document.querySelector('.field:has(#q-placeholder) label').textContent = type==='info' ? 'Info Text (what applicants will see)' : 'Placeholder / Helper Text (optional)');
 };
 
 let currentOptions = [];
@@ -644,7 +648,6 @@ window.saveSchedule = async () => {
 // ── GENERAL ──
 window.saveGeneral = async () => {
   settings.locationName = document.getElementById('locationName').value.trim();
-  settings.payInfo = document.getElementById('payInfo').value.trim();
   settings.motto = document.getElementById('motto').value.trim();
   await setDoc(doc(db,'config-westheimer','settings'), settings);
   showToast('✅ Settings saved!', true);
