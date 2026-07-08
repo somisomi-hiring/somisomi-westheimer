@@ -468,7 +468,7 @@ async function loadSettings() {
   buildScheduleGrid();
   // Update pay okay question label with actual pay info
   const payOkayQ = appQuestions.find(q => q.key === 'payOkay');
-  if (payOkayQ) payOkayQ.label = `Please review our pay before submitting:<br><br>• Paid training: $9 (your first 25–30 hours)<br>&nbsp;&nbsp;&nbsp;↳ Depends on how fast you pick things up<br>• After training: tips bring you to $12–$13/hr<br><br>Are you still interested?`;
+  if (payOkayQ) payOkayQ.label = `Please review our pay before submitting:<br><br>• Paid training: $9/hour (your first 25–30 hours)<br>&nbsp;&nbsp;&nbsp;↳ Depends on how fast you pick things up<br>• After training: tips bring you to $12–$13/hr<br><br>Are you still interested?`;
   buildDynamicForm();
 
   document.getElementById('loading').style.display = 'none';
