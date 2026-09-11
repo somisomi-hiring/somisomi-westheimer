@@ -67,10 +67,51 @@ h1,h2,h3{font-family:'Fraunces',serif;}
 .chip-interviewed{background:var(--yellow-light);color:var(--yellow);border:1px solid var(--yellow-border);}
 .chip-hired{background:var(--green-light);color:var(--green);border:1px solid var(--green-border);}
 .chip-rejected{background:var(--red-light);color:var(--red);border:1px solid var(--red-border);}
-  .chip-contacted{background:var(--purple-light);color:var(--purple);border:1px solid #DDD6FE;}
+.chip-contacted{background:var(--purple-light);color:var(--purple);border:1px solid #DDD6FE;}
 
 /* Candidate list */
 .candidate-list{display:flex;flex-direction:column;gap:8px;}
+.main-toggle{display:flex;background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius);padding:3px;gap:3px;max-width:340px;margin-bottom:16px;}
+.main-toggle-btn{flex:1;padding:8px;text-align:center;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-soft);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.main-toggle-btn.active{background:var(--accent);color:#fff;}
+.rth-section{margin-bottom:16px;}
+.rth-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-soft);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.rth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:6px;}
+.rth-card.yes-hire{border-color:#A7F3D0;}
+.rth-card.conditions{border-color:#FDE68A;}
+.rth-card-header{padding:11px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.rth-card-header:hover{background:var(--surface-alt);}
+.drag-handle-rth{color:var(--text-xs);cursor:grab;font-size:16px;}
+.rth-rank{font-size:16px;font-weight:700;color:var(--green);width:26px;text-align:center;}
+.rth-rank.unranked{color:var(--text-xs);font-size:13px;}
+.rth-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;font-family:'Fraunces',serif;flex-shrink:0;}
+.rth-info{flex:1;min-width:0;}
+.rth-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rth-meta{font-size:11px;color:var(--text-soft);margin-top:2px;}
+.rth-chevron{color:var(--text-xs);font-size:14px;transition:transform 0.2s;}
+.rth-chevron.open{transform:rotate(90deg);}
+.rth-expanded{padding:14px;border-top:1px solid var(--border);display:none;}
+.rth-expanded.open{display:block;}
+.rth-phone-box{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-alt);border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:12px;}
+.rth-phone-number{font-size:16px;font-weight:700;color:var(--accent);letter-spacing:0.5px;}
+.rth-grades{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+.rth-grade-row{display:flex;align-items:center;gap:8px;}
+.rth-grade-label{font-size:11px;color:var(--text-soft);width:120px;flex-shrink:0;}
+.rth-grade-bar{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.rth-grade-fill{height:100%;border-radius:3px;background:var(--green);}
+.rth-grade-val{font-size:11px;font-weight:600;width:16px;text-align:right;}
+.rth-eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.rth-eval-item .label{font-size:10px;color:var(--text-xs);margin-bottom:2px;}
+.rth-eval-item .value{font-size:12px;font-weight:600;color:var(--text);}
+.rth-notes-label{font-size:11px;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}
+.rth-call-notes{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;resize:none;height:60px;box-sizing:border-box;outline:none;margin-bottom:10px;background:var(--surface);}
+.rth-call-notes:focus{border-color:var(--accent);}
+.rth-actions{display:flex;gap:8px;}
+.rth-accept{flex:1;padding:8px;font-size:12px;font-weight:600;background:var(--green-light);color:var(--green);border:1px solid var(--green-border);border-radius:var(--radius-sm);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.rth-decline{flex:1;padding:8px;font-size:12px;font-weight:600;background:var(--red-light);color:var(--red);border:1px solid var(--red-border);border-radius:var(--radius-sm);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.rth-save{padding:8px 12px;font-size:12px;font-weight:600;background:var(--surface);color:var(--text-soft);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.awaiting-card{background:var(--blue-light);border:1px solid var(--blue-border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.empty-rth{text-align:center;padding:40px 20px;color:var(--text-soft);font-size:13px;}
 .candidate-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;}
 .candidate-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-1px);}
 .candidate-card .avatar{width:40px;height:40px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:'Fraunces',serif;flex-shrink:0;}
@@ -180,7 +221,7 @@ textarea{resize:vertical;min-height:70px;}
 <div id="view-login" class="view active" style="min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;background:var(--bg);">
   <div class="login-box">
     <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:800;color:var(--accent);margin-bottom:2px">SomiSomi</div>
-    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">Westheimer</div>
+    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">The Woodlands</div>
     <p style="color:var(--text-soft);font-size:13px;margin-bottom:20px">Hiring Dashboard</p>
     <div class="field"><input type="password" class="pin-input" id="pin-input" placeholder="PIN" maxlength="10"></div>
     <div class="login-error" id="login-error">Incorrect PIN. Try again.</div>
@@ -199,6 +240,12 @@ textarea{resize:vertical;min-height:70px;}
     </div>
   </div>
   <div class="container" style="padding-top:20px">
+    <div style="display:flex;gap:3px;background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius);padding:3px;max-width:320px;margin-bottom:14px;">
+      <button class="main-toggle-btn active" id="toggle-applicants" onclick="switchMainView('applicants')">📋 Applicants</button>
+      <button class="main-toggle-btn" id="toggle-rth" onclick="switchMainView('rth')">✅ Ready to Hire</button>
+    </div>
+
+    <div id="view-applicants-inner">
     <div class="toolbar">
       <div class="search-box">
         <span class="icon">🔍</span>
@@ -215,6 +262,11 @@ textarea{resize:vertical;min-height:70px;}
     </div>
     <div id="upcoming-interviews"></div>
     <div id="candidate-list" class="candidate-list"></div>
+    </div>
+
+    <div id="view-rth-inner" style="display:none">
+      <div id="rth-content"></div>
+    </div>
   </div>
 </div>
 
@@ -808,6 +860,190 @@ function formatTime(str){
   if(!str)return'—';
   try{const[h,m]=str.split(':').map(Number);return`${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`;}catch(e){return str;}
 }
+
+// ── MAIN VIEW TOGGLE ──
+let currentMainView = 'applicants';
+let rthRankings = {}; // candidateId -> rank number
+let expandedCard = null;
+
+window.switchMainView = (view) => {
+  currentMainView = view;
+  document.getElementById('view-applicants-inner').style.display = view === 'applicants' ? 'block' : 'none';
+  document.getElementById('view-rth-inner').style.display = view === 'rth' ? 'block' : 'none';
+  document.getElementById('toggle-applicants').classList.toggle('active', view === 'applicants');
+  document.getElementById('toggle-rth').classList.toggle('active', view === 'rth');
+  if (view === 'rth') renderRTH();
+};
+
+function calcOverall(c) {
+  const vals = GRADES.map(g => parseInt(c['grade'+g.replace(/[^a-zA-Z]/g,'')])||0);
+  const sum = vals.reduce((a,b)=>a+b,0);
+  return vals.filter(v=>v>0).length > 0 ? (sum/GRADES.length).toFixed(1) : null;
+}
+
+function formatDateShort(ts) {
+  if (!ts) return '';
+  try {
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  } catch(e) { return ''; }
+}
+
+function weeksAgo(ts) {
+  if (!ts) return 0;
+  try {
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return (Date.now() - d.getTime()) / (1000*60*60*24*7);
+  } catch(e) { return 0; }
+}
+
+function renderRTH() {
+  const container = document.getElementById('rth-content');
+  if (!container) return;
+
+  // Filter candidates by hire decision
+  const yesHire = candidates.filter(c => c.hireDecision === 'Yes' && c.status !== 'Hired' && c.status !== 'Rejected');
+  const withConditions = candidates.filter(c => c.hireDecision === 'Yes – with conditions' && c.status !== 'Hired' && c.status !== 'Rejected');
+  const awaitingResponse = candidates.filter(c => c.status === 'Offered');
+
+  // Sort yes hire: ranked first (by rank), then unranked by interview date
+  const ranked = yesHire.filter(c => rthRankings[c.id]).sort((a,b) => rthRankings[a.id] - rthRankings[b.id]);
+  const unranked = yesHire.filter(c => !rthRankings[c.id]);
+  const twoWeeksAgo = [...ranked, ...unranked].filter(c => {
+    // Move to following up if interviewed 2+ weeks ago and no rank or rank > 5
+    return false; // simplified - check interviewDate if available
+  });
+  const topCandidates = [...ranked, ...unranked];
+
+  let html = '';
+
+  // Top Candidates
+  if (topCandidates.length) {
+    html += `<div class="rth-section">
+      <div class="rth-section-title">🏆 Top Candidates <span style="font-size:10px;background:var(--green-light);color:var(--green);padding:2px 7px;border-radius:10px;margin-left:4px">${topCandidates.length}</span></div>
+      ${topCandidates.map((c,i) => renderRTHCard(c, rthRankings[c.id]||null, 'yes-hire')).join('')}
+    </div>`;
+  }
+
+  // Awaiting Response
+  if (awaitingResponse.length) {
+    html += `<div class="rth-section">
+      <div class="rth-section-title">📞 Called — Awaiting Response</div>
+      ${awaitingResponse.map(c => {
+        const init=(c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+        return `<div class="awaiting-card">
+          <div class="rth-avatar">${init}</div>
+          <div class="rth-info">
+            <div class="rth-name">${esc(c.name)}</div>
+            <div class="rth-meta">Offered ${formatDateShort(c.offeredAt||c.timestamp)}</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="rth-accept" onclick="markOffer('${c.id}','Hired')">✅ Accepted</button>
+            <button class="rth-decline" onclick="markOffer('${c.id}','Rejected')">❌ Declined</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // Backup - With Conditions
+  if (withConditions.length) {
+    html += `<div class="rth-section">
+      <div class="rth-section-title">🔄 Backup — With Conditions <span style="font-size:10px;background:var(--yellow-light);color:var(--yellow);padding:2px 7px;border-radius:10px;margin-left:4px">${withConditions.length}</span></div>
+      ${withConditions.map(c => renderRTHCard(c, null, 'conditions')).join('')}
+    </div>`;
+  }
+
+  if (!topCandidates.length && !awaitingResponse.length && !withConditions.length) {
+    html = '<div class="empty-rth"><div style="font-size:32px;margin-bottom:8px">🎯</div><p>No candidates ready to hire yet.</p><p style="margin-top:4px;font-size:12px">Complete a vibe evaluation and select "Yes — hire" to see candidates here.</p></div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function renderRTHCard(c, rank, type) {
+  const init=(c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const overall = calcOverall(c);
+  const appliedDate = formatDateShort(c.timestamp);
+  const interviewedDate = c.interviewDate ? formatDate(c.interviewDate) : '';
+  const meta = [appliedDate?'Applied '+appliedDate:'', interviewedDate?'Interviewed '+interviewedDate:'', overall?overall+'/5 overall':''].filter(Boolean).join(' · ');
+  const isOpen = expandedCard === c.id;
+
+  // Grade bars
+  const gradeBars = GRADES.map(g => {
+    const key = 'grade'+g.replace(/[^a-zA-Z]/g,'');
+    const val = parseInt(c[key])||0;
+    const pct = (val/5)*100;
+    const color = val>=4?'var(--green)':val>=3?'var(--yellow)':'var(--red)';
+    return `<div class="rth-grade-row">
+      <div class="rth-grade-label">${g}</div>
+      <div class="rth-grade-bar"><div class="rth-grade-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="rth-grade-val">${val}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="rth-card ${type}" id="rthcard-${c.id}">
+    <div class="rth-card-header" onclick="toggleRTHCard('${c.id}')">
+      <div class="drag-handle-rth">⠿</div>
+      <div class="rth-rank ${rank?'':'unranked'}">${rank?'#'+rank:'—'}</div>
+      <div class="rth-avatar">${init}</div>
+      <div class="rth-info">
+        <div class="rth-name">${esc(c.name)}</div>
+        <div class="rth-meta">${meta}${!rank?' · drag to rank':''}</div>
+      </div>
+      <div class="rth-chevron ${isOpen?'open':''}">›</div>
+    </div>
+    <div class="rth-expanded ${isOpen?'open':''}" id="rthexp-${c.id}">
+      <div class="rth-phone-box">
+        <span style="font-size:18px">📱</span>
+        <div>
+          <div style="font-size:10px;color:var(--text-soft);margin-bottom:1px">Phone</div>
+          <div class="rth-phone-number">${esc(c.phone||'—')}</div>
+        </div>
+      </div>
+      ${c.interviewerName ? `
+      <div style="background:var(--surface-alt);border-radius:var(--radius-sm);border:1px solid var(--border);padding:10px 12px;margin-bottom:12px">
+        <div class="rth-eval-grid">
+          <div class="rth-eval-item"><div class="label">Hire decision</div><div class="value">${esc(c.hireDecision||'—')}</div></div>
+          <div class="rth-eval-item"><div class="label">Coachability</div><div class="value">${esc(c.coachability||'—')}</div></div>
+          <div class="rth-eval-item"><div class="label">Trust w/ closing</div><div class="value">${esc(c.trustClosing||'—')}</div></div>
+          <div class="rth-eval-item"><div class="label">Enjoy working with</div><div class="value">${esc(c.enjoyWorking||'—')}</div></div>
+        </div>
+        <div class="rth-grades">${gradeBars}</div>
+        ${c.vibeNotes?`<div style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px"><div style="font-size:10px;color:var(--text-xs);margin-bottom:3px">Interviewer notes</div><div style="font-size:12px;line-height:1.5">${esc(c.vibeNotes)}</div></div>`:''}
+      </div>` : '<div style="font-size:12px;color:var(--text-soft);margin-bottom:12px;padding:8px;background:var(--surface-alt);border-radius:var(--radius-sm)">No vibe evaluation yet.</div>'}
+      <div class="rth-notes-label">📝 Call Notes</div>
+      <textarea class="rth-call-notes" id="callnotes-${c.id}" placeholder="e.g. Called at 3pm, left voicemail...">${esc(c.callNotes||'')}</textarea>
+      <div class="rth-actions">
+        <button class="rth-accept" onclick="markOffer('${c.id}','Hired')">✅ Accepted offer</button>
+        <button class="rth-decline" onclick="markOffer('${c.id}','Rejected')">❌ Declined offer</button>
+        <button class="rth-save" onclick="saveCallNotes('${c.id}')">Save notes</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+window.toggleRTHCard = (id) => {
+  expandedCard = expandedCard === id ? null : id;
+  renderRTH();
+};
+
+window.markOffer = async (id, status) => {
+  const notes = document.getElementById('callnotes-'+id)?.value || '';
+  await updateDoc(doc(db,'westheimer-candidates',id), { status, callNotes: notes, offeredAt: new Date().toISOString() });
+  const c = candidates.find(c=>c.id===id);
+  if (c) { c.status = status; c.callNotes = notes; }
+  renderRTH();
+  showToast(status === 'Hired' ? '🎉 Marked as Hired!' : 'Marked as Declined', status === 'Hired');
+};
+
+window.saveCallNotes = async (id) => {
+  const notes = document.getElementById('callnotes-'+id)?.value || '';
+  await updateDoc(doc(db,'westheimer-candidates',id), { callNotes: notes });
+  const c = candidates.find(c=>c.id===id);
+  if (c) c.callNotes = notes;
+  showToast('Notes saved!', true);
+};
 
 // INIT
 if(sessionStorage.getItem('dashAuth')){showView('dashboard');}else{showView('login');}
