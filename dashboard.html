@@ -221,7 +221,7 @@ textarea{resize:vertical;min-height:70px;}
 <div id="view-login" class="view active" style="min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;background:var(--bg);">
   <div class="login-box">
     <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:800;color:var(--accent);margin-bottom:2px">SomiSomi</div>
-    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">The Woodlands</div>
+    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">Westheimer</div>
     <p style="color:var(--text-soft);font-size:13px;margin-bottom:20px">Hiring Dashboard</p>
     <div class="field"><input type="password" class="pin-input" id="pin-input" placeholder="PIN" maxlength="10"></div>
     <div class="login-error" id="login-error">Incorrect PIN. Try again.</div>
@@ -265,6 +265,10 @@ textarea{resize:vertical;min-height:70px;}
     </div>
 
     <div id="view-rth-inner" style="display:none">
+      <div style="display:flex;background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius);padding:3px;gap:3px;max-width:340px;margin-bottom:14px;">
+        <button class="main-toggle-btn active" id="rth-sub-yes" onclick="switchRTHSub('yes')">✅ Yes — Hire</button>
+        <button class="main-toggle-btn" id="rth-sub-conditions" onclick="switchRTHSub('conditions')">⚠️ With Conditions</button>
+      </div>
       <div id="rth-content"></div>
     </div>
   </div>
@@ -465,6 +469,11 @@ async function loadCandidates() {
     ]);
     candidates=qSnap.docs.map(d=>({id:d.id,...d.data()}));
     if(formSnap.exists()) appFormQuestions = formSnap.data().questions || [];
+    // Load saved rankings
+    candidates.forEach(c => {
+      if (c.rthRank_thisWeek) rthRankings['thisWeek:'+c.id] = c.rthRank_thisWeek;
+      if (c.rthRank_lastWeek) rthRankings['lastWeek:'+c.id] = c.rthRank_lastWeek;
+    });
     renderCandidates();
   } catch(e) {
     list.innerHTML='<div class="empty"><div class="icon">⚠️</div><p>Could not load candidates.</p></div>';
@@ -863,8 +872,18 @@ function formatTime(str){
 
 // ── MAIN VIEW TOGGLE ──
 let currentMainView = 'applicants';
-let rthRankings = {}; // candidateId -> rank number
+let rthRankings = {}; // 'week:candidateId' -> rank number
+let dragSrcId = null;
+let dragSrcWeek = null;
 let expandedCard = null;
+let rthSubView = 'yes'; // 'yes' or 'conditions'
+
+window.switchRTHSub = (sub) => {
+  rthSubView = sub;
+  document.getElementById('rth-sub-yes').classList.toggle('active', sub === 'yes');
+  document.getElementById('rth-sub-conditions').classList.toggle('active', sub === 'conditions');
+  renderRTH();
+};
 
 window.switchMainView = (view) => {
   currentMainView = view;
@@ -902,26 +921,53 @@ function renderRTH() {
   if (!container) return;
 
   // Filter candidates by hire decision
-  const yesHire = candidates.filter(c => c.hireDecision === 'Yes' && c.status !== 'Hired' && c.status !== 'Rejected');
-  const withConditions = candidates.filter(c => c.hireDecision === 'Yes – with conditions' && c.status !== 'Hired' && c.status !== 'Rejected');
+  const allYesHire = candidates.filter(c => c.hireDecision === 'Yes' && c.status !== 'Hired' && c.status !== 'Rejected');
+  const allWithConditions = candidates.filter(c => c.hireDecision === 'Yes – with conditions' && c.status !== 'Hired' && c.status !== 'Rejected');
   const awaitingResponse = candidates.filter(c => c.status === 'Offered');
+  const yesHire = rthSubView === 'yes' ? allYesHire : [];
+  const withConditions = rthSubView === 'conditions' ? allWithConditions : [];
 
-  // Sort yes hire: ranked first (by rank), then unranked by interview date
-  const ranked = yesHire.filter(c => rthRankings[c.id]).sort((a,b) => rthRankings[a.id] - rthRankings[b.id]);
-  const unranked = yesHire.filter(c => !rthRankings[c.id]);
-  const twoWeeksAgo = [...ranked, ...unranked].filter(c => {
-    // Move to following up if interviewed 2+ weeks ago and no rank or rank > 5
-    return false; // simplified - check interviewDate if available
+  function getInterviewTime(c) {
+    if (!c.interviewDate) return 0;
+    try { return new Date(c.interviewDate+'T12:00:00').getTime(); } catch(e) { return 0; }
+  }
+
+  // Get start of this week (Monday) and last week
+  const now = new Date();
+  const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // Monday = 0
+  const startOfThisWeek = new Date(now); 
+  startOfThisWeek.setHours(0,0,0,0);
+  startOfThisWeek.setDate(now.getDate() - dayOfWeek);
+  const startOfLastWeek = new Date(startOfThisWeek);
+  startOfLastWeek.setDate(startOfThisWeek.getDate() - 7);
+
+  const thisWeek = yesHire.filter(c => {
+    const t = getInterviewTime(c);
+    return t >= startOfThisWeek.getTime();
   });
-  const topCandidates = [...ranked, ...unranked];
+  const lastWeek = yesHire.filter(c => {
+    const t = getInterviewTime(c);
+    return t >= startOfLastWeek.getTime() && t < startOfThisWeek.getTime();
+  });
+  const aged = yesHire.filter(c => {
+    const t = getInterviewTime(c);
+    return !t || t < startOfLastWeek.getTime();
+  });
+
+  function sortByRank(arr, week) {
+    const ranked = arr.filter(c => rthRankings[week+':'+c.id]).sort((a,b) => rthRankings[week+':'+a.id] - rthRankings[week+':'+b.id]);
+    const unranked = arr.filter(c => !rthRankings[week+':'+c.id]).sort((a,b) => getInterviewTime(b) - getInterviewTime(a));
+    return [...ranked, ...unranked];
+  }
 
   let html = '';
 
   // Top Candidates
-  if (topCandidates.length) {
+  if (thisWeek.length || lastWeek.length) {
     html += `<div class="rth-section">
-      <div class="rth-section-title">🏆 Top Candidates <span style="font-size:10px;background:var(--green-light);color:var(--green);padding:2px 7px;border-radius:10px;margin-left:4px">${topCandidates.length}</span></div>
-      ${topCandidates.map((c,i) => renderRTHCard(c, rthRankings[c.id]||null, 'yes-hire')).join('')}
+      <div class="rth-section-title">🏆 Top Candidates</div>
+      ${thisWeek.length ? `<div style="font-size:11px;font-weight:600;color:var(--text-xs);text-transform:uppercase;letter-spacing:0.4px;margin:8px 0 5px;padding-left:2px">This week</div>${sortByRank(thisWeek,'thisWeek').map(c => renderRTHCard(c, rthRankings['thisWeek:'+c.id]||null, 'yes-hire', false, 'thisWeek')).join('')}` : ''}
+      ${lastWeek.length ? `<div style="font-size:11px;font-weight:600;color:var(--text-xs);text-transform:uppercase;letter-spacing:0.4px;margin:10px 0 5px;padding-left:2px">Last week</div>${sortByRank(lastWeek,'lastWeek').map(c => renderRTHCard(c, rthRankings['lastWeek:'+c.id]||null, 'yes-hire', false, 'lastWeek')).join('')}` : ''}
     </div>`;
   }
 
@@ -946,6 +992,14 @@ function renderRTH() {
     </div>`;
   }
 
+  // Following Up - Aged 2+ weeks
+  if (aged.length) {
+    html += `<div class="rth-section">
+      <div class="rth-section-title">⏰ Older Interviews <span style="font-size:10px;background:var(--yellow-light);color:var(--yellow);padding:2px 7px;border-radius:10px;margin-left:4px">before last week</span></div>
+      ${aged.map(c => renderRTHCard(c, rthRankings[c.id]||null, 'yes-hire', true)).join('')}
+    </div>`;
+  }
+
   // Backup - With Conditions
   if (withConditions.length) {
     html += `<div class="rth-section">
@@ -955,18 +1009,21 @@ function renderRTH() {
   }
 
   if (!topCandidates.length && !awaitingResponse.length && !withConditions.length) {
-    html = '<div class="empty-rth"><div style="font-size:32px;margin-bottom:8px">🎯</div><p>No candidates ready to hire yet.</p><p style="margin-top:4px;font-size:12px">Complete a vibe evaluation and select "Yes — hire" to see candidates here.</p></div>';
+    const msg = rthSubView === 'yes' 
+      ? 'No candidates marked "Yes — hire" yet.' 
+      : 'No candidates marked "With conditions" yet.';
+    html = `<div class="empty-rth"><div style="font-size:32px;margin-bottom:8px">🎯</div><p>${msg}</p><p style="margin-top:4px;font-size:12px">Complete a vibe evaluation to see candidates here.</p></div>`;
   }
 
   container.innerHTML = html;
 }
 
-function renderRTHCard(c, rank, type) {
+function renderRTHCard(c, rank, type, aged=false, week="") {
   const init=(c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
   const overall = calcOverall(c);
   const appliedDate = formatDateShort(c.timestamp);
   const interviewedDate = c.interviewDate ? formatDate(c.interviewDate) : '';
-  const meta = [appliedDate?'Applied '+appliedDate:'', interviewedDate?'Interviewed '+interviewedDate:'', overall?overall+'/5 overall':''].filter(Boolean).join(' · ');
+  const meta = [appliedDate?'Applied '+appliedDate:'', interviewedDate?'Interviewed '+interviewedDate:'', overall?overall+'/5':'', c.jobType||''].filter(Boolean).join(' · ');
   const isOpen = expandedCard === c.id;
 
   // Grade bars
@@ -982,10 +1039,21 @@ function renderRTHCard(c, rank, type) {
     </div>`;
   }).join('');
 
-  return `<div class="rth-card ${type}" id="rthcard-${c.id}">
+  return `<div class="rth-card ${type}" id="rthcard-${c.id}"
+    ondragover="event.preventDefault();event.currentTarget.style.borderColor='var(--accent)'"
+    ondragleave="event.currentTarget.style.borderColor=''"
+    ondrop="event.preventDefault();event.currentTarget.style.borderColor='';if(dragSrcId&&dragSrcId!=='${c.id}'&&dragSrcWeek==='${week}'){dropRank(dragSrcId,'${c.id}','${week}');}">
     <div class="rth-card-header" onclick="toggleRTHCard('${c.id}')">
-      <div class="drag-handle-rth">⠿</div>
-      <div class="rth-rank ${rank?'':'unranked'}">${rank?'#'+rank:'—'}</div>
+      <div class="drag-handle-rth" 
+        draggable="true"
+        ondragstart="event.stopPropagation();dragSrcId='${c.id}';dragSrcWeek='${week}';event.dataTransfer.effectAllowed='move';"
+        ondragend="document.querySelectorAll('.rth-card').forEach(el=>el.style.opacity='1')">⠿</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+        <input type="number" min="1" max="99" value="${rank||''}" placeholder="—" 
+          onclick="event.stopPropagation()" 
+          onchange="setRank('${c.id}','${week}',this.value)"
+          style="width:36px;text-align:center;font-size:13px;font-weight:700;color:var(--green);border:1px solid var(--border);border-radius:5px;padding:2px;background:var(--surface);font-family:'DM Sans',sans-serif;outline:none">
+      </div>
       <div class="rth-avatar">${init}</div>
       <div class="rth-info">
         <div class="rth-name">${esc(c.name)}</div>
@@ -1025,6 +1093,41 @@ function renderRTHCard(c, rank, type) {
 
 window.toggleRTHCard = (id) => {
   expandedCard = expandedCard === id ? null : id;
+  renderRTH();
+};
+
+window.setRank = (id, week, val) => {
+  const key = week+':'+id;
+  const num = parseInt(val);
+  if (num > 0) {
+    Object.keys(rthRankings).forEach(k => {
+      if (k.startsWith(week+':') && rthRankings[k] === num && k !== key) delete rthRankings[k];
+    });
+    rthRankings[key] = num;
+  } else {
+    delete rthRankings[key];
+  }
+  updateDoc(doc(db,'westheimer-candidates',id), { ['rthRank_'+week]: num||0 }).catch(()=>{});
+  renderRTH();
+};
+
+window.dropRank = (srcId, targetId, week) => {
+  const srcKey = week+':'+srcId;
+  const tgtKey = week+':'+targetId;
+  const srcRank = rthRankings[srcKey];
+  const tgtRank = rthRankings[tgtKey];
+  // Swap ranks
+  if (srcRank && tgtRank) {
+    rthRankings[srcKey] = tgtRank;
+    rthRankings[tgtKey] = srcRank;
+    updateDoc(doc(db,'westheimer-candidates',srcId), { ['rthRank_'+week]: tgtRank }).catch(()=>{});
+    updateDoc(doc(db,'westheimer-candidates',targetId), { ['rthRank_'+week]: srcRank }).catch(()=>{});
+  } else if (tgtRank) {
+    rthRankings[srcKey] = tgtRank;
+    delete rthRankings[tgtKey];
+    updateDoc(doc(db,'westheimer-candidates',srcId), { ['rthRank_'+week]: tgtRank }).catch(()=>{});
+    updateDoc(doc(db,'westheimer-candidates',targetId), { ['rthRank_'+week]: 0 }).catch(()=>{});
+  }
   renderRTH();
 };
 
