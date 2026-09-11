@@ -1008,6 +1008,7 @@ function renderRTH() {
     </div>`;
   }
 
+  const topCandidates = [...thisWeek, ...lastWeek];
   if (!topCandidates.length && !awaitingResponse.length && !withConditions.length) {
     const msg = rthSubView === 'yes' 
       ? 'No candidates marked "Yes — hire" yet.' 
